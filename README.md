@@ -1,6 +1,6 @@
 # Games
 This program implement 8 games:
-- Pyramic Tic-Tac-Toe.
+- Pyramid Tic-Tac-Toe.
 - Four-in-a-row.
 - 5 x 5 Tic Tac Toe.
 - Word Tic-tac-toe.
@@ -10,7 +10,7 @@ This program implement 8 games:
 - SUS.
 
 ## Description Of Each Game:
-### Pyramic Tic-Tac-Toe: 
+### Pyramid Tic-Tac-Toe: 
 - Description: <br>
 game board is shaped like a pyramid. Five squares make the base, then three, then one. Players take turns marking Xs and Os as in traditional tic-tac-toe.
 - Winning: <br>
