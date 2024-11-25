@@ -11,7 +11,7 @@ This program implement 8 games:
 
 ## Description Of Each Game:
 ### Pyramid Tic-Tac-Toe: 
-#### - Description: 
+- #### Description: 
 game board is shaped like a pyramid. Five squares make the base, then three, then one. Players take turns marking Xs and Os as in traditional tic-tac-toe.
 - #### Winning: 
 The first player to get three-in-a-row vertically, horizontally, or diagonally wins.
