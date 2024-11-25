@@ -26,6 +26,8 @@ The first player places an X in the bottom square of any column. Taking turns, p
 - #### Winning:  
 The first player to get four-in-a-row vertically, horizontally, or diagonally wins.
 
+<hr>
+
 ### 5 x 5 Tic Tac Toe:
 - #### Description:  
 This tic-tac-toe variation is played on a 5 x 5 grid.
@@ -34,6 +36,8 @@ Players take turns placing an X or an O in one of the squares until all the squa
 - #### Winning:  
 Count the number of three-in-a-rows each player has. Sequences can be vertically, horizontally, or diagonally. Whoever has the most, wins. Can one mark be counted in more than one three-in-a-row sequence? Decide ahead of time, yes or no. It is easier in implementation to allow counting more than once.
 
+<hr>
+
 ### Word Tic-tac-toe:
 - #### Description:  
 Word Tic-tac-toe is an innovative twist on the classic Tic-tac-toe game. Instead of using "X" or "O", players place letters on a 3x3 grid to form valid words. This version adds a linguistic challenge to the traditional game mechanics. Players aim to form a valid word with the letters they place on the board. Words can be formed horizontally, vertically, or diagonally.
@@ -41,6 +45,8 @@ Word Tic-tac-toe is an innovative twist on the classic Tic-tac-toe game. Instead
 Each player takes turns placing one letter on the board. A player must try to form a valid word with each move. Players can build upon existing letters to form words, provided that the resulting sequence is a valid word.
 - #### Winning:  
 The game is won by forming a valid word horizontally, vertically, or diagonally. If the board fills up without a valid word being formed, the game ends in a draw.
+
+<hr>
 
 ### Numerical Tic-Tac-Toe:
 - #### Description:  
@@ -51,11 +57,15 @@ Player 1 typically starts and uses odd numbers (1, 3, 5, 7, 9), while Player 2 u
 - #### Winning:  
 A player wins by placing three numbers in a row, column, or diagonal that add up to
 
+<hr>
+
 ### Misere Tic Tac Toe:
 - #### Description:  
 Misere Tic Tac Toe, also known as Inverse Tic Tac Toe or Toe Tac Tic, is a unique twist on the classic game. In this version, the objective is to avoid getting three marks in a row. The game flips the traditional win condition on its head, making every move a strategic decision to prevent losing.
 - #### Rules:  
 The game is played on a standard 3x3 Tic-Tac-Toe grid. The goal is to avoid placing three of your marks in a row, column, or diagonal. The player who ends up with three marks in a row loses the game. If all cells are filled without either player aligning three marks in a row, the game ends in a draw.
+
+<hr>
 
 ### Ultimate Tic Tac Toe:
 - #### Description:  
@@ -64,6 +74,8 @@ Ultimate Tic Tac Toe is an expansion of the classic game, where players engage i
 Player 1 starts by choosing any of the nine smaller Tic Tac Toe boards to play on. Players alternate turns, playing Tic Tac Toe on the smaller boards. The winner of each smaller board claims that space on the main board. The winner of the smaller board replaces that board with their symbol (X or O) on the main board.
 - #### Winning:  
 The first player to win three smaller boards in a row on the main 3x3 grid wins the Ultimate Tic Tac Toe game. The winning row on the main board can be horizontal, vertical, or diagonal.
+
+<hr>
 
 ### SUS:
 - #### Description:  
