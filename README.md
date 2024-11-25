@@ -16,6 +16,8 @@ game board is shaped like a pyramid. Five squares make the base, then three, the
 - #### Winning: 
 The first player to get three-in-a-row vertically, horizontally, or diagonally wins.
 
+<hr>
+
 ### Four-in-a-row:
 - #### Description:  
 You will recognize four-in-a row as a two-dimensional version of the classic game, Connect Four. The game board consists of a 7 x 6 grid. Seven columns of six squares each. Instead of dropping counters as in Connect Four, players mark the grid with Xs and Os as in tic-tac-toe.
