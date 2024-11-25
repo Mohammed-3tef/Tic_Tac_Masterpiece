@@ -25,7 +25,7 @@ The first player places an X in the bottom square of any column. Taking turns, p
 The first player to get four-in-a-row vertically, horizontally, or diagonally wins.
 
 ### 5 x 5 Tic Tac Toe:
-- Description: 
+- Description: <br>
 This tic-tac-toe variation is played on a 5 x 5 grid.
 - Rules: <br>
 Players take turns placing an X or an O in one of the squares until all the squares except one are filled. (Each player has 12 turns for a total of 24 squares.)
