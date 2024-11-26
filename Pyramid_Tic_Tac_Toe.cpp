@@ -4,57 +4,68 @@
 // TA: Ahmed Ihab
 // Version: 1.0
 
-/////////////////////////////////////////////// Headers ////////////////////////////////////////////////////////
+//--------------------------------------- HEADERS
 
 #include <bits/stdc++.h>
 #include "BoardGame_Classes.h"
-
 using namespace std;
+
+//--------------------------------------- HELPER FUNCTIONS
+
+void checkPlayerType(string &playerType, int num) {
+    cout << "\nWhat is player " << num << " type ?\n[1] Human.\n[2] Computer.\nChoice:";
+    getline(cin, playerType);
+    while (true) {
+        if (playerType != "1" && playerType != "2") {
+            cout << "Please enter a valid choice!\n\n";
+            cout << "What is player " << num << " type ?\n[1] Human.\n[2] Computer.\nChoice:";
+            getline(cin, playerType);
+            continue;
+        }
+        return;
+    }
+}
+
+//--------------------------------------- CLASSES
 
 template<typename T>
 class Pyramid_Tic_Tac_Toe_Board : public Board<T> {
+private:
+    bool over = false;
 public:
     Pyramid_Tic_Tac_Toe_Board();
-
-    bool update_board(int x, int y, T symbol);
-
-    void display_board();
-
-    bool is_win();
-
-    bool is_draw();
-
-    bool game_is_over();
+    bool update_board(int x, int y, T symbol) override;
+    void display_board() override;
+    bool is_win() override;
+    bool is_draw() override;
+    bool game_is_over() override;
 };
 
 template<typename T>
 class Pyramid_Tic_Tac_Toe_Player : public Player<T> {
 public:
     Pyramid_Tic_Tac_Toe_Player(string name, T symbol);
-
-    void getmove(int &x, int &y);
+    void getmove(int &x, int &y) override;
 };
 
 template<typename T>
 class Pyramid_Tic_Tac_Toe_Random_Player : public RandomPlayer<T> {
 public:
     Pyramid_Tic_Tac_Toe_Random_Player(T symbol);
-
-    void getmove(int &x, int &y);
+    void getmove(int &x, int &y) override;
 };
 
-
-/////////////////////////////////////////////// Implementation ////////////////////////////////////////////////////////
+//--------------------------------------- IMPLEMENTATION
 
 template<typename T>
 Pyramid_Tic_Tac_Toe_Board<T>::Pyramid_Tic_Tac_Toe_Board() {
     this->rows = 3;
     this->columns = 5;
     int num = 1;
-    this->board = new char*[this->rows];
+    this->board = new char *[this->rows];
     for (int i = 0; i < this->rows; i++) {
         this->board[i] = new char[num];
-        for (int j = 2 - i; j < num; j++) {
+        for (int j = 2 - i; j < num + 2 - i; j++) {
             this->board[i][j] = 0;
         }
         num += 2;
@@ -64,7 +75,14 @@ Pyramid_Tic_Tac_Toe_Board<T>::Pyramid_Tic_Tac_Toe_Board() {
 
 template<typename T>
 bool Pyramid_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
-
+    if (((x == 0 && y == 2) || (x == 1 && y == 1) || (x == 1 && y == 2) || (x == 1 && y == 3) || (x == 2 && y == 0) ||
+         (x == 2 && y == 1) || (x == 2 && y == 2) || (x == 2 && y == 3) ||
+         (x == 2 && y == 4)) && (this->board[x][y] == 0)) {
+        this->n_moves++;
+        this->board[x][y] = toupper(symbol);
+        return true;
+    }
+    return false;
 }
 
 template<typename T>
@@ -74,19 +92,19 @@ void Pyramid_Tic_Tac_Toe_Board<T>::display_board() {
         if (i == 0) {
             cout << "\n            _____\n";
             cout << i + 1 << "           " << "| ";
-            for (int j = 2 - i; j < num+ 2 - i; j++) {
-                cout << setw(1) << this->board[i][j]<< " |";
+            for (int j = 2 - i; j < num + 2 - i; j++) {
+                cout << setw(1) << this->board[i][j] << " |";
             }
             cout << "\n        _____________\n";
         } else if (i == 1) {
             cout << i + 1 << "       " << "| ";
-            for (int j = 2 - i; j < num +2 - i; j++) {
+            for (int j = 2 - i; j < num + 2 - i; j++) {
                 cout << setw(1) << this->board[i][j] << " | ";
             }
             cout << "\n    _____________________\n";
         } else {
             cout << i + 1 << "   " << "| ";
-            for (int j = 2 - i; j < num+ 2 - i; j++) {
+            for (int j = 2 - i; j < num + 2 - i; j++) {
                 cout << setw(1) << this->board[i][j] << " | ";
             }
             cout << "\n    _____________________\n      1   2   3   4   5\n\n";
@@ -96,23 +114,67 @@ void Pyramid_Tic_Tac_Toe_Board<T>::display_board() {
 }
 
 template<typename T>
-bool Pyramid_Tic_Tac_Toe_Board<T>::is_win() {
-
+bool Pyramid_Tic_Tac_Toe_Board<T>::is_win() {                                   // Check winning.
+    if ((this->board[0][2] != 0 && this->board[0][2] == this->board[1][2] && this->board[0][2] == this->board[2][2]) ||
+        (this->board[0][2] != 0 && this->board[0][2] == this->board[1][1] && this->board[0][2] == this->board[2][0]) ||
+        (this->board[0][2] != 0 && this->board[0][2] == this->board[1][3] && this->board[0][2] == this->board[2][4]) ||
+        (this->board[1][1] != 0 && this->board[1][1] == this->board[1][2] && this->board[1][1] == this->board[1][3]) ||
+        (this->board[2][2] != 0 && this->board[2][2] == this->board[2][0] && this->board[2][2] == this->board[2][1]) ||
+        (this->board[2][2] != 0 && this->board[2][2] == this->board[2][1] && this->board[2][2] == this->board[2][3]) ||
+        (this->board[2][2] != 0 && this->board[2][2] == this->board[2][3] && this->board[2][2] == this->board[2][4])) {
+        return true;
+    }
+    return false;
 }
 
 template<typename T>
 bool Pyramid_Tic_Tac_Toe_Board<T>::is_draw() {
-
+    if (this->n_moves == 9) return true;                                        // Check board is full.
+    return false;
 }
 
 template<typename T>
 bool Pyramid_Tic_Tac_Toe_Board<T>::game_is_over() {
-
+    return over;
 }
 
 template<typename T>
 void Pyramid_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
-
+    cout << "It's " << this->name << " turn\n";
+    string dim1, dim2;
+    cout << "\nPlease enter the row:";                                          // Get move.
+    getline(cin, dim1);
+    cout << "Please enter the column:";
+    getline(cin, dim2);
+    while (true) {                                                              // Check validity of move.
+        if (dim1.size() != 1 || dim2.size() != 1) {
+            cout << "Please enter a valid position!\n\n";
+            cout << "\nPlease enter the row:";
+            getline(cin, dim1);
+            cout << "Please enter the column:";
+            getline(cin, dim2);
+            continue;
+        }
+        if (dim1[0] < 49 || dim1[0] > 57) {
+            cout << "Please enter a valid position!\n\n";
+            cout << "\nPlease enter the row:";
+            getline(cin, dim1);
+            cout << "Please enter the column:";
+            getline(cin, dim2);
+            continue;
+        }
+        if (dim2[0] < 49 || dim2[0] > 57) {
+            cout << "Please enter a valid position!\n\n";
+            cout << "\nPlease enter the row:";
+            getline(cin, dim1);
+            cout << "Please enter the column:";
+            getline(cin, dim2);
+            continue;
+        }
+        break;
+    }
+    x = stoi(dim1) - 1;                                                 // Set move.
+    y = stoi(dim2) - 1;
 }
 
 template<typename T>
@@ -126,28 +188,12 @@ void Pyramid_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
 
 template<typename T>
 Pyramid_Tic_Tac_Toe_Random_Player<T>::Pyramid_Tic_Tac_Toe_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
-    this->dimension = 3;
+    this->dimension = 5;
     this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(0)));  // Seed the random number generator
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void checkPlayerType(string &playerType, int num) {
-    cout << "What is player " << num << " type ?\n[1] Human.\n[2] Computer.\nChoice:";
-    getline(cin, playerType);
-    while (true) {
-        if (playerType != "1" && playerType != "2") {
-            cout << "Please enter a valid choice!\n\n";
-            cout << "What is player " << num << " type ?\n[1] Human.\n[2] Computer.\nChoice:";
-            getline(cin, playerType);
-            continue;
-        }
-        return;
-    }
-}
-
-/////////////////////////////////////////////// Main ////////////////////////////////////////////////////////
+//--------------------------------------- MAIN FUNCTION
 
 int main() {
     string player1Type, player2Type, player1Name, player2Name;
@@ -156,20 +202,18 @@ int main() {
 
     cout << "<--------- Welcome To Pyramid Tic Tac Toe --------->\n";
     checkPlayerType(player1Type, 1);                // Get info of player 1.
-    cout << "Please enter Player 1 name:";
-    getline(cin, player1Name);
-
     if (player1Type == "1") {
+        cout << "Please enter Player 1 name:";
+        getline(cin, player1Name);
         players[0] = new Pyramid_Tic_Tac_Toe_Player<char>(player1Name, 'X');
     } else {
         players[0] = new Pyramid_Tic_Tac_Toe_Random_Player<char>('X');
     }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
-    cout << "Please enter Player 2 name:";
-    getline(cin, player2Name);
-
     if (player2Type == "1") {
+        cout << "Please enter Player 2 name:";
+        getline(cin, player2Name);
         players[1] = new Pyramid_Tic_Tac_Toe_Player<char>(player2Name, 'O');
     } else {
         players[1] = new Pyramid_Tic_Tac_Toe_Random_Player<char>('O');
@@ -177,5 +221,8 @@ int main() {
 
     GameManager<char> Pyramid_Tic_Tac_Toe_Game(gameBoard, players);
     Pyramid_Tic_Tac_Toe_Game.run();
-    cout << "Thanks For Playing My Game :)";
+    delete gameBoard;                                           // Delete board.
+    delete players[0];                                          // Delete players.
+    delete players[1];
+    cout << "\nThanks For Playing My Game :)";
 }
