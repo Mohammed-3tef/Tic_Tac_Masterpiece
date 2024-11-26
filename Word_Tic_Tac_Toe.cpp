@@ -151,7 +151,7 @@ bool Word_Tic_Tac_Toe_Board<T>::is_win() {
         patterns.push_back(row);
         patterns.push_back(col);
     }
-    string diag1 = "", diag2 = "";              
+    string diag1 = "", diag2 = "";
     for (int i = 0; i < 3; i++) {                                           // Check winning diagonally.
         diag1 += this->board[i][i];
         diag2 += this->board[i][2 - i];
@@ -211,7 +211,7 @@ void Word_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
     cout << "Please enter the column:";
     getline(cin, dim2);
     while (true) {                                                              // Check validity of move.
-        if (dim1.size() != 1 || dim2.size() != 1) {                             
+        if (dim1.size() != 1 || dim2.size() != 1) {
             cout << "Please enter a valid position!\n\n";
             cout << "\nPlease enter the row:";
             getline(cin, dim1);
@@ -264,35 +264,34 @@ Word_Tic_Tac_Toe_Random_Player<T>::Word_Tic_Tac_Toe_Random_Player(T symbol) : Ra
 //--------------------------------------- MAIN FUNCTION
 
 int main() {
+    cout << "<--------- Welcome To Word Tic Tac Toe --------->\n";
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
     Word_Tic_Tac_Toe_Board<char> *gameBoard = new Word_Tic_Tac_Toe_Board<char>();
-
-    cout << "<--------- Welcome To Word Tic Tac Toe --------->\n";
     vector<string> lines = getFile();
     gameBoard->setDic(lines);
-    checkPlayerType(player1Type, 1);                // Get info of player 1.
-    cout << "Please enter Player 1 name:";
-    getline(cin, player1Name);
 
+    checkPlayerType(player1Type, 1);                // Get info of player 1.
     if (player1Type == "1") {
-        players[0] = new Word_Tic_Tac_Toe_Player<char>(player1Name, '1');
+        cout << "Please enter Player 1 name:";
+        getline(cin, player1Name);
+        players[0] = new Word_Tic_Tac_Toe_Player<char>(player1Name, 'a');
     } else {
         players[0] = new Word_Tic_Tac_Toe_Random_Player<char>('a');
     }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
-    cout << "Please enter Player 2 name:";
-    getline(cin, player2Name);
-
     if (player2Type == "1") {
-        players[1] = new Word_Tic_Tac_Toe_Player<char>(player2Name, '1');
+        cout << "Please enter Player 2 name:";
+        getline(cin, player2Name);
+        players[1] = new Word_Tic_Tac_Toe_Player<char>(player2Name, 'a');
     } else {
         players[1] = new Word_Tic_Tac_Toe_Random_Player<char>('a');
     }
 
     GameManager<char> Pyramid_Tic_Tac_Toe_Game(gameBoard, players);
     Pyramid_Tic_Tac_Toe_Game.run();
+
     delete gameBoard;                                           // Delete board.
     delete players[0];                                          // Delete players.
     delete players[1];
