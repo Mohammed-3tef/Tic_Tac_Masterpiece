@@ -189,7 +189,7 @@ SUS_Random_Player<T>::SUS_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
 //--------------------------------------- MAIN FUNCTION
 
 int main() {
-    cout << "<--------- Welcome To Word Tic Tac Toe --------->\n";
+    cout << "<--------- Welcome To SUS --------->\n";
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
     SUS_Board<char> *gameBoard = new SUS_Board<char>();
