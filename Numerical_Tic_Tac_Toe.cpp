@@ -8,20 +8,21 @@
  * This is a simple implementation of the Numerical Tic Tac Toe game.
  * The game is played on a 3x3 board where each cell is filled with a number from 0 to 9.
  * The game is played between two players:
-    * The first player has the odd numbers {1, 3, 5, 7, 9}
-    * The second player has the even numbers {0, 2, 4, 6, 8}.
+    ** The first player has the odd numbers {1, 3, 5, 7, 9}
+    ** The second player has the even numbers {0, 2, 4, 6, 8}.
  * The players take turns to place a number in an empty cell.
  * The player who places three numbers that sum up to 15 in a row, column, or diagonal wins the game.
  * The game ends in a draw if all cells are filled and no player wins.
- * The game is implemented using the BoardGame_Classes.h header file.
 */
 
 //--------------------------------------- HEADERS
+
 #include <bits/stdc++.h>
 #include "BoardGame_Classes.h"
 using namespace std;
 
 //--------------------------------------- GLOBAL VARIABLES
+
 static set<int> firstPlayer = {1, 3, 5, 7, 9};
 static set<int> secondPlayer = {0, 2, 4, 6, 8};
 bool firstPlayerTurn = true;
@@ -33,7 +34,7 @@ void checkPlayerType(string &playerType, int num) {
     getline(cin, playerType);
     while (true) {
         if (playerType != "1" && playerType != "2") {
-            cout << "Please enter a valid choice!\n\n";
+            cout << "Please enter a valid choice!!\n\n";
             cout << "What is player " << num << " type ?\n [1] Human.\n [2] Computer.\nEnter Your Choice :";
             getline(cin, playerType);
             continue;
@@ -49,9 +50,11 @@ void operator<<(ostream& out, set<int>& arr){
     }
 }
 
-template<typename T>
-void colored_output(int num, T myStr) {
-    cout << "\033[" << num << "m" << myStr << "\033[0m";
+bool IsValidNumber(const string& str) {
+    for (char character : str) {
+        if (!isdigit(character)) return false;
+    }
+    return true;
 }
 
 //--------------------------------------- CLASSES
@@ -62,18 +65,12 @@ private:
     int row_sums[3] = {0};  // Sum of each row
     int col_sums[3] = {0};  // Sum of each column
     int diag_sum[2] = {0};  // Sum of diagonals
-    set<int> usedNumbers;
 public:
     Numerical_Tic_Tac_Toe_Board();
-
     bool update_board(int x, int y, T symbol) override;
-
     void display_board() override;
-
     bool is_win() override;
-
     bool is_draw() override;
-
     bool game_is_over() override;
 };
 
@@ -81,7 +78,6 @@ template<typename T>
 class Numerical_Tic_Tac_Toe_Player : public Player<T> {
 public:
     Numerical_Tic_Tac_Toe_Player(string name, T symbol);
-
     void getmove(int &x, int &y) override;
 };
 
@@ -89,7 +85,6 @@ template<typename T>
 class Numerical_Tic_Tac_Toe_Random_Player : public RandomPlayer<T> {
 public:
     explicit Numerical_Tic_Tac_Toe_Random_Player(T symbol);
-
     void getmove(int &x, int &y) override;
 };
 
@@ -100,6 +95,7 @@ Numerical_Tic_Tac_Toe_Board<T>::Numerical_Tic_Tac_Toe_Board() {
     this->rows = 3;
     this->columns = 3;
     this->board = new T*[this->rows];
+    // Initialize the board with zeros
     for (int i = 0; i < this->rows; i++) {
         this->board[i] = new T[this->columns];
         for (int j = 0; j < this->columns; j++) {
@@ -109,6 +105,7 @@ Numerical_Tic_Tac_Toe_Board<T>::Numerical_Tic_Tac_Toe_Board() {
     this->n_moves = 0;
 }
 
+// Update the board with the new move
 template<typename T>
 bool Numerical_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
     // Validate move
@@ -121,7 +118,7 @@ bool Numerical_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
     this->board[x][y] = symbol + '0';
     row_sums[x] += symbol;
     col_sums[y] += symbol;
-    if (x == y) diag_sum[0] += symbol;  // Main diagonal
+    if (x == y) diag_sum[0] += symbol;      // Main diagonal
     if (x + y == 2) diag_sum[1] += symbol;  // Anti-diagonal
 
     this->n_moves++;
@@ -141,16 +138,11 @@ void Numerical_Tic_Tac_Toe_Board<T>::display_board() {
 
     for (int i = 0; i < this->rows; i++) {
         cout << ' ' << i + 1 << " |";
-        for (int j = 0; j < this->rows; j++) {
+        for (int j = 0; j < this->columns; j++) {
             cout << " " << setw(1);
-            if (this->board[i][j] == 0) {
-                cout << " ";
-            }
-            else if (this->board[i][j] %2 == 0) {
-                colored_output(31, this->board[i][j]);
-            } else {
-                colored_output(34, this->board[i][j]);
-            }
+
+            if (this->board[i][j] == 0) cout << " ";
+            else cout << this->board[i][j];
 
             cout << " |";
         }
@@ -161,10 +153,38 @@ void Numerical_Tic_Tac_Toe_Board<T>::display_board() {
 
 template<typename T>
 bool Numerical_Tic_Tac_Toe_Board<T>::is_win() {
-    for (int i = 0; i < 3; i++) {
-        if (row_sums[i] == 15 || col_sums[i] == 15) return true;
+    // Check horizontal
+    for (int i = 0; i < this->rows; i++) {
+        int countRowCells = 0;          // Reset for each row
+
+        for (int j = 0; j < this->columns; j++) {
+            if (this->board[i][j] != 0) countRowCells++;
+        }
+        if (countRowCells == 3 && row_sums[i] == 15) return true;
     }
-    return (diag_sum[0] == 15 || diag_sum[1] == 15);
+
+    // Check vertical
+    for (int j = 0; j < this->columns; j++) {
+        int countColCells = 0;          // Reset for each column
+
+        for (int i = 0; i < this->rows; i++) {
+            if (this->board[i][j] != 0) countColCells++;
+        }
+        if (countColCells == 3 && col_sums[j] == 15) return true;
+    }
+
+    // Check diagonals
+    int countDiagCells = 0, countAntiDiagCells = 0;
+    for (int i = 0; i < this->rows; i++) {
+        if (this->board[i][i] != 0) countDiagCells++;
+        if (this->board[i][this->columns - 1 - i] != 0) countAntiDiagCells++;
+    }
+    if ((countDiagCells == 3 && diag_sum[0] == 15) || (countAntiDiagCells == 3 && diag_sum[1] == 15)) {
+        return true;
+    }
+
+    // If no win condition is met
+    return false;
 }
 
 template<typename T>
@@ -179,44 +199,70 @@ bool Numerical_Tic_Tac_Toe_Board<T>::game_is_over() {
 
 template<typename T>
 void Numerical_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
-    int number;
-    if (firstPlayerTurn) {
-        colored_output(34, this->name);
-        cout << ", it's your turn.\n";
+    string numberAsString;
+    cout << this->name << ", it's your turn.\n";
+
+    // First player's turn.
+    while (firstPlayerTurn) {
         cout << "Enter your available number [";
         cout << firstPlayer;
         cout << "] :";
-        cin >> number;
+        getline(cin, numberAsString);
 
-        while (firstPlayer.find(number) == firstPlayer.end()) {
-            cout << "Number already used. Try again.\n";
-            cout << "Enter your available number [";
-            cout << firstPlayer;
-            cout << "] :";
-            cin >> number;
+        // Validate the input
+        if (!IsValidNumber(numberAsString) || numberAsString.empty()) {
+            cout << "Invalid number. Try again.\n";
+            continue;
         }
+
+        // Check if the number is available
+        else if (firstPlayer.find(stoi(numberAsString)) == firstPlayer.end()) {
+            cout << "Number already used. Try again.\n";
+            continue;
+        }
+        else break;
     }
-    else {
-        colored_output(31, this->name);
-        cout << ", it's your turn.\n";
+
+    // Second player's turn.
+    while (!firstPlayerTurn) {
         cout << "Enter your available number [";
         cout << secondPlayer;
         cout << "] :";
-        cin >> number;
+        getline(cin, numberAsString);
 
-        while (secondPlayer.find(number) == secondPlayer.end()) {
-            cout << "Number already used. Try again.\n";
-            cout << "Enter your available number [";
-            cout << secondPlayer;
-            cout << "] :";
-            cin >> number;
+        // Validate the input
+        if (!IsValidNumber(numberAsString) || numberAsString.empty()) {
+            cout << "Invalid number. Try again.\n";
+            continue;
         }
-    }
-    this->symbol = number;
 
-    cout << "Enter the row and column numbers (1-3) separated by a space :";
-    cin >> x >> y;
-    x--; y--;  // Convert to zero-based indexing
+        // Check if the number is available
+        else if (secondPlayer.find(stoi(numberAsString)) == secondPlayer.end()) {
+            cout << "Number already used. Try again.\n";
+            continue;
+        }
+        else break;
+    }
+
+    this->symbol = numberAsString[0] - '0';     // Convert to integer
+
+    // Get the row and column numbers
+    while (true) {
+        cout << "Enter the row number (1-3) :";
+        string xAsString; getline(cin, xAsString);
+        cout << "Enter the column number (1-3) :";
+        string yAsString; getline(cin, yAsString);
+
+        // Validate the input
+        if (!IsValidNumber(xAsString) || !IsValidNumber(yAsString) || xAsString.empty() || yAsString.empty()) {
+            cout << "Invalid number. Try again.\n";
+            continue;
+        }
+
+        x = stoi(xAsString) -1;    // Convert to zero-based indexing
+        y = stoi(yAsString) -1;    // Convert to zero-based indexing
+        break;
+    }
 }
 
 template<typename T>
