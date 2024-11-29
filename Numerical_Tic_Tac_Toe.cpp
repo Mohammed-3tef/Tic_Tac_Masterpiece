@@ -2,7 +2,7 @@
 // ID: 20231143
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 3.0
+// Version: 4.0
 
 /*
  * This is a simple implementation of the Numerical Tic Tac Toe game.
@@ -23,6 +23,7 @@ using namespace std;
 
 //--------------------------------------- GLOBAL VARIABLES
 
+set<pair<int, int>> availablePositions;
 static set<int> firstPlayer = {1, 3, 5, 7, 9};
 static set<int> secondPlayer = {0, 2, 4, 6, 8};
 bool firstPlayerTurn = true;
@@ -83,6 +84,7 @@ public:
 
 template<typename T>
 class Numerical_Tic_Tac_Toe_Random_Player : public RandomPlayer<T> {
+    vector<int> availableNumbers;
 public:
     explicit Numerical_Tic_Tac_Toe_Random_Player(T symbol);
     void getmove(int &x, int &y) override;
@@ -128,6 +130,9 @@ bool Numerical_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
         secondPlayer.erase(symbol);
     }
     firstPlayerTurn = !firstPlayerTurn;
+
+    // Random player
+    availablePositions.insert({x, y});
     return true;
 }
 
@@ -270,8 +275,23 @@ Numerical_Tic_Tac_Toe_Player<T>::Numerical_Tic_Tac_Toe_Player(string name, T sym
 
 template<typename T>
 void Numerical_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
+    int randomIndex = rand() % this->availableNumbers.size();
+    this->symbol = this->availableNumbers[randomIndex];
+
+    // Get the row and column numbers
     x = rand() % this->dimension;  // Random number between 0 and 2
     y = rand() % this->dimension;
+
+    // Check if the position is already taken
+    while (availablePositions.find({x, y}) != availablePositions.end()) {
+        x = rand() % this->dimension;  // Random number between 0 and 2
+        y = rand() % this->dimension;
+    }
+
+    cout << this->name << " chooses number: " << this->availableNumbers[randomIndex] << endl;
+    cout << "and placed it in row: " << x + 1 << " and column: " << y + 1 << endl;
+
+    this->availableNumbers.erase(this->availableNumbers.begin() + randomIndex);
 }
 
 template<typename T>
@@ -279,6 +299,12 @@ Numerical_Tic_Tac_Toe_Random_Player<T>::Numerical_Tic_Tac_Toe_Random_Player(T sy
     this->dimension = 3;
     this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(nullptr)));  // Seed the random number generator
+    // Populate the set with either even or odd numbers
+    if (symbol == '1') {
+        this->availableNumbers = {1, 3, 5, 7, 9};
+    } else {  // Odd numbers
+        this->availableNumbers = {0, 2, 4, 6, 8};
+    }
 }
 
 //--------------------------------------- MAIN FUNCTION
@@ -296,7 +322,7 @@ int main() {
     if (player1Type == "1") {
         players[0] = new Numerical_Tic_Tac_Toe_Player<char>(player1Name, '1');
     } else {
-        players[0] = new Numerical_Tic_Tac_Toe_Random_Player<char>('2');
+        players[0] = new Numerical_Tic_Tac_Toe_Random_Player<char>('1');
     }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
@@ -304,7 +330,7 @@ int main() {
     getline(cin, player2Name);
 
     if (player2Type == "1") {
-        players[1] = new Numerical_Tic_Tac_Toe_Player<char>(player2Name,'1');
+        players[1] = new Numerical_Tic_Tac_Toe_Player<char>(player2Name,'2');
     }
     else {
         players[1] = new Numerical_Tic_Tac_Toe_Random_Player<char>('2');
@@ -314,5 +340,6 @@ int main() {
     Numerical_Tic_Tac_Toe_Game.run();
     cout << "\n\tThanks For Playing My Game :)" << endl;
 
+    delete gameBoard;
     return 0;
 }

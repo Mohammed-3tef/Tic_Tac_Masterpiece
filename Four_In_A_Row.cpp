@@ -21,6 +21,9 @@
 #include "BoardGame_Classes.h"
 using namespace std;
 
+//--------------------------------------- GLOBAL VARIABLES
+set<int> fullColumns;
+
 //--------------------------------------- HELPER FUNCTIONS
 
 void checkPlayerType(string &playerType, int num) {
@@ -112,7 +115,8 @@ bool Four_In_A_Row_Board<T>::update_board(int x, int y, T symbol) {
             return true;
         }
     }
-    cout << "Column is full! Try another column.\n";
+    cout << "Column is full! Try another column.\n\n";
+    fullColumns.insert(y);
     return false;
 }
 
@@ -239,8 +243,14 @@ Four_In_A_Row_Player<T>::Four_In_A_Row_Player(string name, T symbol) : Player<T>
 // Get a random move
 template<typename T>
 void Four_In_A_Row_Random_Player<T>::getmove(int &x, int &y) {
-    x = rand() % this->dimension;  // Random number between 0 and 2
-    y = rand() % this->dimension;
+    y = rand() % 7;  // Random number between 0 and 6
+    // Check if column is full
+    while (fullColumns.find(y) != fullColumns.end()) {
+        y = rand() % this->dimension;
+    }
+
+    x = 5;
+    cout << this->name << " chooses column: " << y + 1 << endl;
 }
 
 // Constructor for the Four_In_A_Row_Random_Player
@@ -287,5 +297,6 @@ int main() {
     Four_In_A_Row_Game.run();
     cout << "\n\tThanks For Playing My Game :)" << endl;
 
+    delete gameBoard;
     return 0;
 }
