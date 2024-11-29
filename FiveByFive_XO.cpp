@@ -34,7 +34,6 @@ private:
     bool over = false;
     // Declare the helper function
     int count_three_in_a_row(T symbol); //private because it doesn't need to be extended to other classes or the game manager
-//    static int player;
 public:
     FivebyFive_Tic_Tac_Toe_Board();
     bool update_board(int x, int y, T symbol) override;
@@ -42,7 +41,6 @@ public:
     bool is_win() override;
     bool is_draw() override;
     bool game_is_over() override;
-//    static int getPlayer(){return player;}
 };
 
 template<typename T>
@@ -59,13 +57,6 @@ public:
     void getmove(int &x, int &y) override;
 };
 
-template<typename T>
-class FivebyFive_Tic_Tac_Toe_Game_Manager:public GameManager<T>{
-public:
-    FivebyFive_Tic_Tac_Toe_Game_Manager(Board<T>*, Player<T>* playerPtr[2]);
-    void run();
-};
-
 //--------------------------------------- IMPLEMENTATION
 
 #include <iostream>
@@ -73,42 +64,6 @@ public:
 using namespace std;
 
 
-
-
-template <typename T>
-void FivebyFive_Tic_Tac_Toe_Game_Manager<T>::run() {
-    int x, y;
-
-    this->boardPtr->display_board();
-
-    while (!this->boardPtr->game_is_over()) {
-        for (int i : {0, 1}) {
-            this->players[i]->getmove(x, y);
-            while (!this->boardPtr->update_board(x, y, this->players[i]->getsymbol())) {
-                this->players[i]->getmove(x, y);
-            }
-            this->boardPtr->display_board();
-            if (this->boardPtr->is_win()) {
-                if (player==1){
-                    cout << this->players[1]->getname() << " wins\n";
-                    return;
-                }
-                else if (player==2){
-                    cout << this->players[2]->getname() << " wins\n";
-                    return;
-                }
-                else{
-                    cout << this->players[i]->getname() << " wins\n";
-                    return;
-                }
-            }
-            if (this->boardPtr->is_draw()) {
-                cout << "Draw!\n";
-                return;
-            }
-        }
-    }
-}
 
 // Constructor for X_O_Board
 template <typename T>
@@ -207,11 +162,11 @@ int FivebyFive_Tic_Tac_Toe_Board<T>::count_three_in_a_row(T symbol) {
 
 
 
-// Returns true if there is any winner
 template <typename T>
 bool FivebyFive_Tic_Tac_Toe_Board<T>::is_win() {
     // Ensure the board is full except for one square
-    if (this->n_moves < 24) {
+    int end = 24;
+    if (this->n_moves < end) {
         return false; // Not yet time to determine the winner
     }
 
@@ -219,32 +174,43 @@ bool FivebyFive_Tic_Tac_Toe_Board<T>::is_win() {
     int scoreX = count_three_in_a_row('X');
     int scoreO = count_three_in_a_row('O');
 
-    // Announce the winner
-    std::cout << "\nFinal Scores:\n";
-    std::cout << "Player X: " << scoreX << " three-in-a-rows\n";
-    std::cout << "Player O: " << scoreO << " three-in-a-rows\n";
+    // Announce the scores
+    cout << "\nFinal Scores:\n";
+    cout << "Player X: " << scoreX << " three-in-a-rows\n";
+    cout << "Player O: " << scoreO << " three-in-a-rows\n";
 
-    if (scoreX > scoreO) {
-//        std::cout << "Player X wins!\n";
-        player = 1;
-    } else if (scoreO > scoreX) {
-//        std::cout << "Player O wins!\n";
-        player = 2;
-    } else {
-//        std::cout << "It's a draw!\n";
+    // Determine winner
+    if (scoreO > scoreX) {
+        cout << "Player O wins!\n";
+        return true; // Game over
+    } else if (scoreX > scoreO) {
+        cout << "Player X wins!\n";
+
+        // Simulate the 25th move for Player X
+        for (int i = 0; i < this->rows; ++i) {
+            for (int j = 0; j < this->columns; ++j) {
+                if (this->board[i][j] == 0) { // Find an empty cell
+                    // Perform the dummy move
+                    update_board(i, j, 'X'); // Place 'X' in the last empty cell
+                    return true; // Game ends with the dummy move
+                }
+            }
+        }
     }
 
-    // The game is over, return true to signal completion
-    return true;
-
+    // Handle draw case (if scores are equal)
+    cout << "It's a draw!\n";
+    return true; // Game over
 }
+
+
 
 
 
 // Return true if 9 moves are done and no winner
 template <typename T>
 bool FivebyFive_Tic_Tac_Toe_Board<T>::is_draw() {
-    return (this->n_moves == 24 && !is_win());
+    return (this->n_moves == 24 && count_three_in_a_row('X')==count_three_in_a_row('O'));
 }
 
 
@@ -334,8 +300,7 @@ int main() {
         players[1] = new FivebyFive_Tic_Tac_Toe_Random_Player<char>('O');
     }
 
-    // Use the customized MisereGameManager
-    FivebyFive_Tic_Tac_Toe_Game_Manager<char> FivebyFive_Tic_Tac_Toe_Game(gameBoard, players);
+    GameManager<char> FivebyFive_Tic_Tac_Toe_Game(gameBoard, players);
     FivebyFive_Tic_Tac_Toe_Game.run();
 
     return 0;
