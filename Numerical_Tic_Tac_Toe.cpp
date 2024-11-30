@@ -52,10 +52,7 @@ void operator<<(ostream& out, set<int>& arr){
 }
 
 bool IsValidNumber(const string& str) {
-    for (char character : str) {
-        if (!isdigit(character)) return false;
-    }
-    return true;
+    return all_of(str.begin(), str.end(), ::isdigit);
 }
 
 //--------------------------------------- CLASSES
@@ -63,9 +60,9 @@ bool IsValidNumber(const string& str) {
 template<typename T>
 class Numerical_Tic_Tac_Toe_Board : public Board<T> {
 private:
-    int row_sums[3] = {0};  // Sum of each row
-    int col_sums[3] = {0};  // Sum of each column
-    int diag_sum[2] = {0};  // Sum of diagonals
+    int row_sums[3] = {0};      // Sum of each row
+    int col_sums[3] = {0};      // Sum of each column
+    int diag_sum[2] = {0};      // Sum of diagonals
 public:
     Numerical_Tic_Tac_Toe_Board();
     bool update_board(int x, int y, T symbol) override;
@@ -336,10 +333,11 @@ int main() {
         players[1] = new Numerical_Tic_Tac_Toe_Random_Player<char>('2');
     }
 
+    // Create the game manager
     GameManager<char> Numerical_Tic_Tac_Toe_Game(gameBoard, players);
     Numerical_Tic_Tac_Toe_Game.run();
-    cout << "\n\tThanks For Playing My Game :)" << endl;
 
+    cout << "\n\tThanks For Playing My Game :)" << endl;
     delete gameBoard;
     return 0;
 }

@@ -48,10 +48,7 @@ void operator<<(ostream& out, set<int>& arr){
 }
 
 bool IsValidNumber(const string& str) {
-    for (char character : str) {
-        if (!isdigit(character)) return false;
-    }
-    return true;
+    return all_of(str.begin(), str.end(), ::isdigit);
 }
 
 //--------------------------------------- CLASSES
@@ -243,7 +240,7 @@ Four_In_A_Row_Player<T>::Four_In_A_Row_Player(string name, T symbol) : Player<T>
 // Get a random move
 template<typename T>
 void Four_In_A_Row_Random_Player<T>::getmove(int &x, int &y) {
-    y = rand() % 7;  // Random number between 0 and 6
+    y = rand() % this->dimension;  // Random number between 0 and 6
     // Check if column is full
     while (fullColumns.find(y) != fullColumns.end()) {
         y = rand() % this->dimension;
@@ -256,7 +253,7 @@ void Four_In_A_Row_Random_Player<T>::getmove(int &x, int &y) {
 // Constructor for the Four_In_A_Row_Random_Player
 template<typename T>
 Four_In_A_Row_Random_Player<T>::Four_In_A_Row_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
-    this->dimension = 3;
+    this->dimension = 7;
     this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(nullptr)));  // Seed the random number generator
 }
@@ -295,8 +292,8 @@ int main() {
     // Create the game manager
     GameManager<char> Four_In_A_Row_Game(gameBoard, players);
     Four_In_A_Row_Game.run();
-    cout << "\n\tThanks For Playing My Game :)" << endl;
 
+    cout << "\n\tThanks For Playing My Game :)" << endl;
     delete gameBoard;
     return 0;
 }
