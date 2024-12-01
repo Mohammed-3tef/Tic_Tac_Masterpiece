@@ -44,7 +44,7 @@ public:
 template<typename T>
 class Misere_Tic_Tac_Toe_Player : public Player<T> {
 public:
-   Misere_Tic_Tac_Toe_Player(string name, T symbol);
+    Misere_Tic_Tac_Toe_Player(string name, T symbol);
     void getmove(int &x, int &y) override;
 };
 
@@ -64,54 +64,6 @@ public:
 #include <iomanip>
 #include <cctype>
 using namespace std;
-
-
-
-
-template <typename T>
-class MisereGameManager {
-private:
-    Board<T>* boardPtr;
-    Player<T>* players[2];
-
-public:
-    MisereGameManager(Board<T>* bPtr, Player<T>* playerPtr[2]) {
-        boardPtr = bPtr;
-        players[0] = playerPtr[0];
-        players[1] = playerPtr[1];
-    }
-
-    void run() {
-        int x, y;
-
-        boardPtr->display_board();
-
-        while (!boardPtr->game_is_over()) {
-            for (int i : {0, 1}) {
-                players[i]->getmove(x, y);
-
-                // Validate and update the move
-                while (!boardPtr->update_board(x, y, players[i]->getsymbol())) {
-                    players[i]->getmove(x, y);
-                }
-
-                boardPtr->display_board();
-
-                // Misère-specific: Treat win as a loss
-                if (boardPtr->is_win()) {
-                    std::cout << players[i]->getname() << " loses (Misere condition)!\n";
-                    return;
-                }
-
-                if (boardPtr->is_draw()) {
-                    std::cout << "It's a draw!\n";
-                    return;
-                }
-            }
-        }
-    }
-};
-
 
 
 
@@ -272,26 +224,28 @@ int main() {
     cout << "Please enter Player 1 name:";
     getline(cin, player1Name);
 
-    if (player1Type == "1") {
-        players[0] = new Misere_Tic_Tac_Toe_Player<char>(player1Name, 'X');
-    } else {
-        players[0] = new Misere_Tic_Tac_Toe_Random_Player<char>('X');
-    }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
     cout << "Please enter Player 2 name:";
     getline(cin, player2Name);
 
+    if (player1Type == "1") {
+        players[0] = new Misere_Tic_Tac_Toe_Player<char>(player2Name, 'X');
+    } else {
+        players[0] = new Misere_Tic_Tac_Toe_Random_Player<char>('X');
+    }
+
+
     if (player2Type == "1") {
-        players[1] = new Misere_Tic_Tac_Toe_Player<char>(player2Name,'O');
+        players[1] = new Misere_Tic_Tac_Toe_Player<char>(player1Name,'O');
     }
     else {
         players[1] = new Misere_Tic_Tac_Toe_Random_Player<char>('O');
     }
 
     // Use the customized MisereGameManager
-    MisereGameManager<char> Misere_Tic_Tac_Toe_Game(gameBoard, players);
-    Misere_Tic_Tac_Toe_Game.run();
+    GameManager<char> Ultimate_Tic_Tac_Toe_Game(gameBoard, players);
+    Ultimate_Tic_Tac_Toe_Game.run();
 
     return 0;
 }
