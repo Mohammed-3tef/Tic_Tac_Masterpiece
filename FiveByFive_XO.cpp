@@ -2,7 +2,7 @@
 // ID: 20231189
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 1.0
+// Version: 2.0
 
 //--------------------------------------- HEADERS
 
@@ -27,11 +27,14 @@ void checkPlayerType(string &playerType, int num) {
 }
 
 //--------------------------------------- CLASSES
-int player = 0;
+
+int num=0;
+string nameX;
 template<typename T>
 class FivebyFive_Tic_Tac_Toe_Board : public Board<T> {
 private:
-    bool over = false;
+    bool winX = false;
+    bool draw = false;
     // Declare the helper function
     int count_three_in_a_row(T symbol); //private because it doesn't need to be extended to other classes or the game manager
 public:
@@ -59,17 +62,11 @@ public:
 
 //--------------------------------------- IMPLEMENTATION
 
-#include <iostream>
-#include <cctype>
-using namespace std;
-
-
-
 // Constructor for X_O_Board
-template <typename T>
+template<typename T>
 FivebyFive_Tic_Tac_Toe_Board<T>::FivebyFive_Tic_Tac_Toe_Board() { //the constructor here is where we initialize the board
     this->rows = this->columns = 5;    //5 rows and 5 columns to make the grid
-    this->board = new char*[this->rows];
+    this->board = new char *[this->rows];
     for (int i = 0; i < this->rows; i++) {
         this->board[i] = new char[this->columns];
         for (int j = 0; j < this->columns; j++) {
@@ -79,27 +76,22 @@ FivebyFive_Tic_Tac_Toe_Board<T>::FivebyFive_Tic_Tac_Toe_Board() { //the construc
     this->n_moves = 0;
 }
 
-
-
-template <typename T>
+template<typename T>
 bool FivebyFive_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T mark) {
     // Only update if move is valid
-    if (!(x < 0 || x >= this->rows || y < 0 || y >= this->columns) && (this->board[x][y] == 0|| mark == 0)) {
-        if (mark == 0){
+    if (!(x < 0 || x >= this->rows || y < 0 || y >= this->columns) && (this->board[x][y] == 0 || mark == 0)) {
+        if (mark == 0) {
             this->n_moves--;
             this->board[x][y] = 0;
-        }
-        else {
+        } else {
             this->n_moves++;
+            num ++;
             this->board[x][y] = toupper(mark);
         }
-
         return true;
     }
     return false;
 }
-
-
 
 template<typename T>
 void FivebyFive_Tic_Tac_Toe_Board<T>::display_board() {
@@ -115,9 +107,7 @@ void FivebyFive_Tic_Tac_Toe_Board<T>::display_board() {
     }
 }
 
-
-
-template <typename T>
+template<typename T>
 int FivebyFive_Tic_Tac_Toe_Board<T>::count_three_in_a_row(T symbol) {
     int count = 0;
 
@@ -129,7 +119,6 @@ int FivebyFive_Tic_Tac_Toe_Board<T>::count_three_in_a_row(T symbol) {
             }
         }
     }
-
     // Check vertical
     for (int i = 0; i <= this->rows - 3; ++i) {
         for (int j = 0; j < this->columns; ++j) {
@@ -142,7 +131,8 @@ int FivebyFive_Tic_Tac_Toe_Board<T>::count_three_in_a_row(T symbol) {
     // Check diagonal (top-left to bottom-right)
     for (int i = 0; i <= this->rows - 3; ++i) {
         for (int j = 0; j <= this->columns - 3; ++j) {
-            if (this->board[i][j] == symbol && this->board[i + 1][j + 1] == symbol && this->board[i + 2][j + 2] == symbol) {
+            if (this->board[i][j] == symbol && this->board[i + 1][j + 1] == symbol &&
+                this->board[i + 2][j + 2] == symbol) {
                 count++;
             }
         }
@@ -151,93 +141,69 @@ int FivebyFive_Tic_Tac_Toe_Board<T>::count_three_in_a_row(T symbol) {
     // Check diagonal (top-right to bottom-left)
     for (int i = 0; i <= this->rows - 3; ++i) {
         for (int j = 2; j < this->columns; ++j) {
-            if (this->board[i][j] == symbol && this->board[i + 1][j - 1] == symbol && this->board[i + 2][j - 2] == symbol) {
+            if (this->board[i][j] == symbol && this->board[i + 1][j - 1] == symbol &&
+                this->board[i + 2][j - 2] == symbol) {
                 count++;
             }
         }
     }
-
     return count;
 }
 
-
-
-template <typename T>
+template<typename T>
 bool FivebyFive_Tic_Tac_Toe_Board<T>::is_win() {
-    // Ensure the board is full except for one square
-    int end = 24;
-    if (this->n_moves < end) {
-        return false; // Not yet time to determine the winner
-    }
-
     // Calculate scores for each player
     int scoreX = count_three_in_a_row('X');
     int scoreO = count_three_in_a_row('O');
 
+    // Ensure the board is full except for one square
+    if (this->n_moves < 24) {
+        return false; // Not yet time to determine the winner
+    }
+
+    if (winX) {
+        cout << nameX << " wins\n";
+        return true;
+    }
     // Announce the scores
     cout << "\nFinal Scores:\n";
     cout << "Player X: " << scoreX << " three-in-a-rows\n";
     cout << "Player O: " << scoreO << " three-in-a-rows\n";
-
-    // Determine winner
-    if (scoreO > scoreX) {
-        cout << "Player O wins!\n";
-        return true; // Game over
-    } else if (scoreX > scoreO) {
-        cout << "Player X wins!\n";
-
-        // Simulate the 25th move for Player X
-        for (int i = 0; i < this->rows; ++i) {
-            for (int j = 0; j < this->columns; ++j) {
-                if (this->board[i][j] == 0) { // Find an empty cell
-                    // Perform the dummy move
-                    update_board(i, j, 'X'); // Place 'X' in the last empty cell
-                    return true; // Game ends with the dummy move
-                }
-            }
-        }
+    if (this->n_moves == 24 && scoreX > scoreO) {
+        winX = true;
+        return false;
+    } else if (this->n_moves == 24 && scoreX == scoreO) {
+        draw = true;
+        return false;
     }
-
-    // Handle draw case (if scores are equal)
-    cout << "It's a draw!\n";
     return true; // Game over
 }
 
-
-
-
-
 // Return true if 9 moves are done and no winner
-template <typename T>
+template<typename T>
 bool FivebyFive_Tic_Tac_Toe_Board<T>::is_draw() {
-    return (this->n_moves == 24 && count_three_in_a_row('X')==count_three_in_a_row('O'));
+    return draw;
 }
 
-
-
-template <typename T>
+template<typename T>
 bool FivebyFive_Tic_Tac_Toe_Board<T>::game_is_over() {
     return is_win() || is_draw();
 }
 
-
-
-//--------------------------------------
-
 // Constructor for X_O_Player
-template <typename T>
+template<typename T>
 FivebyFive_Tic_Tac_Toe_Player<T>::FivebyFive_Tic_Tac_Toe_Player(string name, T symbol) : Player<T>(name, symbol) {}
 
-
-
-template <typename T>
-void FivebyFive_Tic_Tac_Toe_Player<T>::getmove(int& x, int& y) {
+template<typename T>
+void FivebyFive_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
+    if (num == 0) nameX = this->name;
     while (true) {
         cout << "Enter your move in this form(row space column,e.g 1 3): ";
         cin >> x >> y;
 
         // Convert to 0-based indexing
-        x--; y--;
+        x--;
+        y--;
 
         if (cin.fail() || x < 0 || x >= 5 || y < 0 || y >= 5) {
             cin.clear(); // Clear error flags
@@ -249,30 +215,23 @@ void FivebyFive_Tic_Tac_Toe_Player<T>::getmove(int& x, int& y) {
     }
 }
 
-
-
 // Constructor for X_O_Random_Player
-template <typename T>
+template<typename T>
 FivebyFive_Tic_Tac_Toe_Random_Player<T>::FivebyFive_Tic_Tac_Toe_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
     this->dimension = 5;
     this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(0)));  // Seed the random number generator
 }
 
-
-
-template <typename T>
-void FivebyFive_Tic_Tac_Toe_Random_Player<T>::getmove(int& x, int& y) {
+template<typename T>
+void FivebyFive_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
+    if (num == 0) nameX = this->name;
     x = rand() % this->dimension;  // Random number between 0 and 2
     y = rand() % this->dimension;
 }
 
-
-
-
-
-
 //--------------------------------------- MAIN FUNCTION
+
 int main() {
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
@@ -288,20 +247,19 @@ int main() {
     } else {
         players[0] = new FivebyFive_Tic_Tac_Toe_Random_Player<char>('X');
     }
-
     checkPlayerType(player2Type, 2);                // Get info of player 2.
     cout << "Please enter Player 2 name:";
     getline(cin, player2Name);
 
     if (player2Type == "1") {
-        players[1] = new FivebyFive_Tic_Tac_Toe_Player<char>(player2Name,'O');
-    }
-    else {
+        players[1] = new FivebyFive_Tic_Tac_Toe_Player<char>(player2Name, 'O');
+    } else {
         players[1] = new FivebyFive_Tic_Tac_Toe_Random_Player<char>('O');
     }
 
     GameManager<char> FivebyFive_Tic_Tac_Toe_Game(gameBoard, players);
     FivebyFive_Tic_Tac_Toe_Game.run();
 
+    cout << "\nThanks For Playing My Game :)";
     return 0;
 }
