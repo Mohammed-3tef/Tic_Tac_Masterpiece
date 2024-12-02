@@ -30,12 +30,12 @@ using namespace std;
 //--------------------------------------- ALL GAMES
 
 void checkPlayerType(string &playerType, int num) {
-    cout << "\nWhat is player " << num << " type ?\n[1] Human.\n[2] Computer.\nChoice:";
+    cout << "\nWhat is player " << num << " type ?\n [1] Human.\n [2] Computer.\nChoice:";
     getline(cin, playerType);
     while (true) {
         if (playerType != "1" && playerType != "2") {
             cout << "Please enter a valid choice!\n\n";
-            cout << "What is player " << num << " type ?\n[1] Human.\n[2] Computer.\nChoice:";
+            cout << "What is player " << num << " type ?\n [1] Human.\n [2] Computer.\nChoice:";
             getline(cin, playerType);
             continue;
         }
@@ -72,12 +72,12 @@ vector<string> getFile() {
         break;
     }
     fileContent = content.str();
-    for (int i = 0; i < fileContent.size(); ++i) {
-        if (fileContent[i] == '\n') {
+    for (char character : fileContent) {
+        if (character == '\n') {
             lines.push_back(s);
             s = "";
         } else {
-            s += fileContent[i];
+            s += character;
         }
     }
     lines.push_back(s);
@@ -361,18 +361,17 @@ int main() {
 
     while (true) {
         string choice;
-        cout << "Which game do you want?\n" << "[1] Pyramid_Tic_Tac_Toe.\n" << "[2] Four_In_A_Row.\n"
-             << "[3] 5_X_5_Tic_Tac_Toe.\n" << "[4] Word_Tic_Tac_Toe.\n" << "[5] Numerical_Tic_Tac_Toe.\n"
-             << "[6] Misere_Tic_Tac_Toe.\n" << "[7] Ultimate_Tic_Tac_Toe.\n" << "[8] SUS.\n" << "[9] Exit.\nChoice:";
+        cout << "Which game do you want?\n" << " [1] Pyramid_Tic_Tac_Toe.\n" << " [2] Four_In_A_Row.\n"
+             << " [3] 5_X_5_Tic_Tac_Toe.\n" << " [4] Word_Tic_Tac_Toe.\n" << " [5] Numerical_Tic_Tac_Toe.\n"
+             << " [6] Misere_Tic_Tac_Toe.\n" << " [7] Ultimate_Tic_Tac_Toe.\n" << " [8] SUS.\n" << " [9] Exit.\nChoice:";
         getline(cin, choice);
         while (true) {
             if (choice != "1" && choice != "2" && choice != "3" && choice != "4" && choice != "5" && choice != "6" &&
                 choice != "7" && choice != "8" && choice != "9") {
                 cout << "Please enter a valid choice!\n\n";
-                cout << "Which game do you want?\n" << "[1] Pyramid_Tic_Tac_Toe.\n" << "[2] Four_In_A_Row.\n"
-                     << "[3] 5_X_5_Tic_Tac_Toe.\n" << "[4] Word_Tic_Tac_Toe.\n" << "[5] Numerical_Tic_Tac_Toe.\n"
-                     << "[6] Misere_Tic_Tac_Toe.\n" << "[7] Ultimate_Tic_Tac_Toe.\n" << "[8] SUS.\n"
-                     << "[9] Exit.\nChoice:";
+                cout << "Which game do you want?\n" << " [1] Pyramid_Tic_Tac_Toe.\n" << " [2] Four_In_A_Row.\n"
+                     << " [3] 5_X_5_Tic_Tac_Toe.\n" << " [4] Word_Tic_Tac_Toe.\n" << " [5] Numerical_Tic_Tac_Toe.\n"
+                     << " [6] Misere_Tic_Tac_Toe.\n" << " [7] Ultimate_Tic_Tac_Toe.\n" << " [8] SUS.\n" << " [9] Exit.\nChoice:";
                 getline(cin, choice);
                 continue;
             }
@@ -390,6 +389,7 @@ int main() {
         else if (choice == "9") break;
     }
 
-    cout << "THANKS FOR USING OUR APPLICATION :)";
+    cout << "\tTHANKS FOR USING OUR APPLICATION :)\n";
+    cout << "\t\tSEE YOU LATER...\n";
     return 0;
 }
