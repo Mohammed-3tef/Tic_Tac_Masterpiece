@@ -1,34 +1,32 @@
-// Author 1: Esraa Emary Abd El-Salam
-// Author 2: Mohammed Atef Abd El-Kader
-// Author 3: Nagham Wael Mohamed El-Sayed
-
-// ID 1: 20230054
-// ID 2: 20231143
-// ID 3: 20231189
-
+// Author: Nagham Wael Mohamed
+// ID: 20231189
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 3.0
+// Version: 1.0
+
+/*
+ * This is a simple implementation of the Four In A Row game.
+ * The game is played on a 3x3 board where each cell is filled with either 'X' or 'O'.
+ * The game is played between two players:
+     ** The first player has the symbol 'X'.
+     ** The second player has the symbol 'O'.
+ * The players take turns to place their symbol in an empty cell.
+ * The player who places four symbols in a row, column, or diagonal loses the game.
+ * The game ends in a draw if all cells are filled and no player wins.
+*/
 
 //--------------------------------------- HEADERS
 
 #include <bits/stdc++.h>
 #include "BoardGame_Classes.h"
-#include "Pyramid_Tic_Tac_Toe.h"
-#include "Four_In_A_Row.h"
-#include "Five_By_Five_Tic_Tac_Toe.h"
-#include "Word_Tic_Tac_Toe.h"
-#include "Numerical_Tic_Tac_Toe.h"
-#include "Misere_Tic_Tac_Toe.h"
-//#include "Ultimate_Tic_Tac_Toe.h"
-#include "SUS.h"
-
 using namespace std;
 
+//--------------------------------------- GLOBAL VARIABLES
+
+string name1, name2;
+int countNum = 0;
+
 //--------------------------------------- HELPER FUNCTIONS
-
-//--------------------------------------- ALL GAMES
-
 void checkPlayerType(string &playerType, int num) {
     cout << "\nWhat is player " << num << " type ?\n[1] Human.\n[2] Computer.\nChoice:";
     getline(cin, playerType);
@@ -42,234 +40,169 @@ void checkPlayerType(string &playerType, int num) {
         return;
     }
 }
+//--------------------------------------- CLASSES
 
-//--------------------------------------- Word_Tic_Tac_Toe
+template<typename T>
+class Misere_Tic_Tac_Toe_Board : public Board<T> {
+public:
+    Misere_Tic_Tac_Toe_Board();
+    bool update_board(int x, int y, T symbol) override;
+    void display_board() override;
+    bool is_win() override;
+    bool is_draw() override;
+    bool game_is_over() override;
+    void getNames(string namePlayer1, string namePlayer2);
+};
 
-vector<string> getFile() {
-    string fileContent, s = "", fileName;
-    stringstream content;
-    vector<string> lines;
-    cout << "\nPlease enter file name:";
-    while (true) {
-        getline(cin, fileName);                               // get file name and check the validity of format.
-        if (fileName.size() < 5) {
-            cout << "\nThe file name should be like this ----> (file name).txt\n";
-            cout << "Please enter a valid file name :";
-            continue;
+template<typename T>
+class Misere_Tic_Tac_Toe_Player : public Player<T> {
+public:
+    Misere_Tic_Tac_Toe_Player(string name, T symbol);
+    void getmove(int &x, int &y) override;
+};
+
+template<typename T>
+class Misere_Tic_Tac_Toe_Random_Player : public RandomPlayer<T> {
+public:
+    Misere_Tic_Tac_Toe_Random_Player(T symbol);
+    void getmove(int &x, int &y) override;
+};
+
+//--------------------------------------- IMPLEMENTATION
+
+template<typename T>
+void Misere_Tic_Tac_Toe_Board<T>::getNames(std::string namePlayer1, std::string namePlayer2) {
+    name1 = namePlayer1;
+    name2 = namePlayer2;
+}
+
+template<typename T>
+// Constructor for X_O_Board
+Misere_Tic_Tac_Toe_Board<T>::Misere_Tic_Tac_Toe_Board() { //the constructor here is where we initialize the board
+    this->rows = this->columns = 3;    //3 rows and 3 columns to make the grid
+    this->board = new char *[this->rows];
+    for (int i = 0; i < this->rows; i++) {
+        this->board[i] = new char[this->columns];
+        for (int j = 0; j < this->columns; j++) {
+            this->board[i][j] = 0;   //initialized the board with zeros
         }
-        if (fileName.substr(fileName.size() - 4, 4) != ".txt") {
-            cout << "\nThe file name should be like this ----> (file name).txt\n";
-            cout << "Please enter a valid file name :";
-            continue;
-        }
-        ifstream file(fileName);
-        if (!file.good()) {
-            cout << "\nThe file name should be like this ----> (file name).txt\n";
-            cout << "Please enter a valid file name :";
-            continue;
-        }
-        content << file.rdbuf();
-        break;
     }
-    fileContent = content.str();
-    for (int i = 0; i < fileContent.size(); ++i) {
-        if (fileContent[i] == '\n') {
-            lines.push_back(s);
-            s = "";
+    this->n_moves = 0;
+}
+
+template<typename T>
+bool Misere_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T mark) {
+    // Only update if move is valid
+    if (!(x < 0 || x >= this->rows || y < 0 || y >= this->columns) && (this->board[x][y] == 0 || mark == 0)) {
+        if (mark == 0) {
+            this->n_moves--;
+            this->board[x][y] = 0;
         } else {
-            s += fileContent[i];
+            this->n_moves++;
+            countNum++;
+            this->board[x][y] = toupper(mark);
+        }
+        return true;
+    }
+    return false;
+}
+
+template<typename T>
+void Misere_Tic_Tac_Toe_Board<T>::display_board() {
+    cout << "\n     1   2   3\n";
+    cout << "   -------------\n";
+
+    for (int i = 0; i < this->rows; i++) {
+        cout << ' ' << i + 1 << " |";
+        for (int j = 0; j < this->columns; j++) {
+            cout << " " << setw(1);
+
+            if (this->board[i][j] == 0) cout << " ";
+            else cout << this->board[i][j];
+
+            cout << " |";
+        }
+        cout << "\n   -------------\n";
+    }
+    cout << endl;
+}
+
+template<typename T>
+// Returns true if there is any winner
+bool Misere_Tic_Tac_Toe_Board<T>::is_win() {
+    // Check rows and columns
+    for (int i = 0; i < this->rows; i++) {
+        if ((this->board[i][0] == this->board[i][1] && this->board[i][1] == this->board[i][2] &&
+             this->board[i][0] != 0) ||
+            (this->board[0][i] == this->board[1][i] && this->board[1][i] == this->board[2][i] &&
+             this->board[0][i] != 0)) {
+            return true;
         }
     }
-    lines.push_back(s);
-    return lines;
+
+    // Check diagonals
+    if ((this->board[0][0] == this->board[1][1] && this->board[1][1] == this->board[2][2] && this->board[0][0] != 0) ||
+        (this->board[0][2] == this->board[1][1] && this->board[1][1] == this->board[2][0] && this->board[0][2] != 0)) {
+        return true;
+    }
+    return false;
 }
 
-//--------------------------------------- CALLING EACH FUNCTION
-
-//--------------------------------------- Pyramid_Tic_Tac_Toe
-
-void Pyramid_Tic_Tac_Toe() {
-    string player1Type, player2Type, player1Name, player2Name;
-    Player<char> *players[2];
-    Pyramid_Tic_Tac_Toe_Board<char> *gameBoard = new Pyramid_Tic_Tac_Toe_Board<char>();
-
-    cout << "<--------- Welcome To Pyramid Tic Tac Toe --------->\n";
-    checkPlayerType(player1Type, 1);                // Get info of player 1.
-    if (player1Type == "1") {
-        cout << "Please enter Player 1 name:";
-        getline(cin, player1Name);
-        players[0] = new Pyramid_Tic_Tac_Toe_Player<char>(player1Name, 'X');
-    } else {
-        players[0] = new Pyramid_Tic_Tac_Toe_Random_Player<char>('X');
-    }
-
-    checkPlayerType(player2Type, 2);                // Get info of player 2.
-    if (player2Type == "1") {
-        cout << "Please enter Player 2 name:";
-        getline(cin, player2Name);
-        players[1] = new Pyramid_Tic_Tac_Toe_Player<char>(player2Name, 'O');
-    } else {
-        players[1] = new Pyramid_Tic_Tac_Toe_Random_Player<char>('O');
-    }
-
-    GameManager<char> Pyramid_Tic_Tac_Toe_Game(gameBoard, players);
-    Pyramid_Tic_Tac_Toe_Game.run();
-
-    delete gameBoard;                                           // Delete board.
-    delete players[0];                                          // Delete players.
-    delete players[1];
-    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
+// Return true if 9 moves are done and no winner
+template<typename T>
+bool Misere_Tic_Tac_Toe_Board<T>::is_draw() {
+    return (this->n_moves == 9 && !is_win());
 }
 
-//--------------------------------------- Four_In_A_Row
-
-void Four_In_A_Row() {
-    string player1Type, player2Type, player1Name, player2Name;
-    Player<char> *players[2];
-    auto *gameBoard = new Four_In_A_Row_Board<char>();
-    cout << "<--------- Welcome To Four In A Row --------->\n";
-
-    checkPlayerType(player1Type, 1);                // Get info of player 1.
-    // Create player 1
-    if (player1Type == "1") {
-        cout << "Please Enter Player 1 name :";
-        getline(cin, player1Name);
-        players[0] = new Four_In_A_Row_Player<char>(player1Name, 'X');
-    } else {
-        players[0] = new Four_In_A_Row_Random_Player<char>('X');
-    }
-
-    checkPlayerType(player2Type, 2);                // Get info of player 2.
-    // Create player 2
-    if (player2Type == "1") {
-        cout << "Please Enter Player 2 name :";
-        getline(cin, player2Name);
-        players[1] = new Four_In_A_Row_Player<char>(player2Name, 'O');
-    } else {
-        players[1] = new Four_In_A_Row_Random_Player<char>('O');
-    }
-
-    // Create the game manager
-    GameManager<char> Four_In_A_Row_Game(gameBoard, players);
-    Four_In_A_Row_Game.run();
-
-    delete gameBoard;                                           // Delete board.
-    delete players[0];                                          // Delete players.
-    delete players[1];
-    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
+template<typename T>
+bool Misere_Tic_Tac_Toe_Board<T>::game_is_over() {
+    return is_win() || is_draw();
 }
 
-//--------------------------------------- Five_By_Five_Tic_Tac_Toe
+template<typename T>
+// Constructor for X_O_Player
+Misere_Tic_Tac_Toe_Player<T>::Misere_Tic_Tac_Toe_Player(string name, T symbol) : Player<T>(name, symbol) {}
 
-void _5_X_5_Tic_Tac_Toe() {
-    string player1Type, player2Type, player1Name, player2Name;
-    Player<char> *players[2];
-    auto *gameBoard = new FivebyFive_Tic_Tac_Toe_Board<char>();
-    cout << "<--------- Welcome To 5x5 Tic Tac Toe --------->\n";
+template<typename T>
+void Misere_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
+    if (countNum % 2 == 0) this->name = name2;
+    else this->name = name1;
 
-    checkPlayerType(player1Type, 1);                // Get info of player 1.
-    if (player1Type == "1") {
-        cout << "Please enter Player 1 name:";
-        getline(cin, player1Name);
-        players[0] = new FivebyFive_Tic_Tac_Toe_Player<char>(player1Name, 'X');
-    } else {
-        players[0] = new FivebyFive_Tic_Tac_Toe_Random_Player<char>('X');
+    while (true) {
+        cout << "Enter your move in this form(row space column,e.g 1 3): ";
+        cin >> x >> y;
+
+        // Convert to 0-based indexing
+        x--; y--;
+
+        if (cin.fail() || x < 0 || x >= 3 || y < 0 || y >= 3) {
+            cin.clear(); // Clear error flags
+            cin.ignore(INT_MAX, '\n'); // Discard invalid input
+            cout << "Invalid input. Try again.\n";
+        } else {
+            break;
+        }
     }
-
-    checkPlayerType(player2Type, 2);                // Get info of player 2.
-    if (player2Type == "1") {
-        cout << "Please enter Player 2 name:";
-        getline(cin, player2Name);
-        players[1] = new FivebyFive_Tic_Tac_Toe_Player<char>(player2Name, 'O');
-    } else {
-        players[1] = new FivebyFive_Tic_Tac_Toe_Random_Player<char>('O');
-    }
-
-    GameManager<char> FivebyFive_Tic_Tac_Toe_Game(gameBoard, players);
-    FivebyFive_Tic_Tac_Toe_Game.run();
-
-    delete gameBoard;                                           // Delete board.
-    delete players[0];                                          // Delete players.
-    delete players[1];
-    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
 }
 
-//--------------------------------------- Word_Tic_Tac_Toe
-
-void Word_Tic_Tac_Toe() {
-    cout << "<--------- Welcome To Word Tic Tac Toe --------->\n";
-    string player1Type, player2Type, player1Name, player2Name;
-    Player<char> *players[2];
-    Word_Tic_Tac_Toe_Board<char> *gameBoard = new Word_Tic_Tac_Toe_Board<char>();
-    vector<string> lines = getFile();
-    gameBoard->setDic(lines);
-
-    checkPlayerType(player1Type, 1);                // Get info of player 1.
-    if (player1Type == "1") {
-        cout << "Please enter Player 1 name:";
-        getline(cin, player1Name);
-        players[0] = new Word_Tic_Tac_Toe_Player<char>(player1Name, 'a');
-    } else {
-        players[0] = new Word_Tic_Tac_Toe_Random_Player<char>('a');
-    }
-
-    checkPlayerType(player2Type, 2);                // Get info of player 2.
-    if (player2Type == "1") {
-        cout << "Please enter Player 2 name:";
-        getline(cin, player2Name);
-        players[1] = new Word_Tic_Tac_Toe_Player<char>(player2Name, 'a');
-    } else {
-        players[1] = new Word_Tic_Tac_Toe_Random_Player<char>('a');
-    }
-
-    GameManager<char> Pyramid_Tic_Tac_Toe_Game(gameBoard, players);
-    Pyramid_Tic_Tac_Toe_Game.run();
-
-    delete gameBoard;                                           // Delete board.
-    delete players[0];                                          // Delete players.
-    delete players[1];
-    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
+template<typename T>
+// Constructor for X_O_Random_Player
+Misere_Tic_Tac_Toe_Random_Player<T>::Misere_Tic_Tac_Toe_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
+    this->dimension = 3;
+    srand(static_cast<unsigned int>(time(0)));  // Seed the random number generator
 }
 
-//--------------------------------------- Numerical_Tic_Tac_Toe
-
-void Numerical_Tic_Tac_Toe() {
-    string player1Type, player2Type, player1Name, player2Name;
-    Player<char> *players[2];
-    auto *gameBoard = new Numerical_Tic_Tac_Toe_Board<char>();
-    cout << "<--------- Welcome To Numerical Tic Tac Toe --------->\n";
-
-    checkPlayerType(player1Type, 1);                // Get info of player 1.
-    if (player1Type == "1") {
-        cout << "Please enter Player 1 name:";
-        getline(cin, player1Name);
-        players[0] = new Numerical_Tic_Tac_Toe_Player<char>(player1Name, '1');
-    } else {
-        players[0] = new Numerical_Tic_Tac_Toe_Random_Player<char>('1');
-    }
-
-    checkPlayerType(player2Type, 2);                // Get info of player 2.
-    if (player2Type == "1") {
-        cout << "Please enter Player 2 name:";
-        getline(cin, player2Name);
-        players[1] = new Numerical_Tic_Tac_Toe_Player<char>(player2Name, '2');
-    } else {
-        players[1] = new Numerical_Tic_Tac_Toe_Random_Player<char>('2');
-    }
-
-    // Create the game manager
-    GameManager<char> Numerical_Tic_Tac_Toe_Game(gameBoard, players);
-    Numerical_Tic_Tac_Toe_Game.run();
-
-    delete gameBoard;                                           // Delete board.
-    delete players[0];                                          // Delete players.
-    delete players[1];
-    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
+template<typename T>
+void Misere_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
+    if (countNum % 2 == 0) this->name = name2;
+    else this->name = name1;
+    x = rand() % this->dimension;  // Random number between 0 and 2
+    y = rand() % this->dimension;
 }
 
-//--------------------------------------- Misere_Tic_Tac_Toe
+//--------------------------------------- MAIN FUNCTION
 
-void Misere_Tic_Tac_Toe() {
+int main(){
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
     auto *gameBoard = new Misere_Tic_Tac_Toe_Board<char>();
@@ -308,87 +241,4 @@ void Misere_Tic_Tac_Toe() {
     delete players[0];                                          // Delete players.
     delete players[1];
     cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
-
-//--------------------------------------- Ultimate_Tic_Tac_Toe
-
-void Ultimate_Tic_Tac_Toe() {
-
-}
-
-//--------------------------------------- SUS
-
-void SUS() {
-    cout << "<--------- Welcome To SUS --------->\n";
-    string player1Type, player2Type, player1Name, player2Name;
-    Player<char> *players[2];
-    SUS_Board<char> *gameBoard = new SUS_Board<char>();
-
-    checkPlayerType(player1Type, 1);                // Get info of player 1.
-    if (player1Type == "1") {
-        cout << "Please enter Player 1 name:";
-        getline(cin, player1Name);
-        players[0] = new SUS_Player<char>(player1Name, 'S');
-    } else {
-        players[0] = new SUS_Random_Player<char>('S');
-    }
-
-    checkPlayerType(player2Type, 2);                // Get info of player 2.
-    if (player2Type == "1") {
-        cout << "Please enter Player 2 name:";
-        getline(cin, player2Name);
-        players[1] = new SUS_Player<char>(player2Name, 'U');
-    } else {
-        players[1] = new SUS_Random_Player<char>('U');
-    }
-
-    GameManager<char> SUS_Game(gameBoard, players);
-    SUS_Game.run();
-
-    delete gameBoard;                                           // Delete board.
-    delete players[0];                                          // Delete players.
-    delete players[1];
-    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
-}
-
-//--------------------------------------- MAIN FUNCTION
-
-int main() {
-    cout << "<---------- WELCOME TO OUR APPLICATION ---------->\n"
-         << "OUR APPLICATION HAS A NUMBER OF INTERESTING GAMES!\n\n";
-
-    while (true) {
-        string choice;
-        cout << "Which game do you want?\n" << "[1] Pyramid_Tic_Tac_Toe.\n" << "[2] Four_In_A_Row.\n"
-             << "[3] 5_X_5_Tic_Tac_Toe.\n" << "[4] Word_Tic_Tac_Toe.\n" << "[5] Numerical_Tic_Tac_Toe.\n"
-             << "[6] Misere_Tic_Tac_Toe.\n" << "[7] Ultimate_Tic_Tac_Toe.\n" << "[8] SUS.\n" << "[9] Exit.\nChoice:";
-        getline(cin, choice);
-        while (true) {
-            if (choice != "1" && choice != "2" && choice != "3" && choice != "4" && choice != "5" && choice != "6" &&
-                choice != "7" && choice != "8" && choice != "9") {
-                cout << "Please enter a valid choice!\n\n";
-                cout << "Which game do you want?\n" << "[1] Pyramid_Tic_Tac_Toe.\n" << "[2] Four_In_A_Row.\n"
-                     << "[3] 5_X_5_Tic_Tac_Toe.\n" << "[4] Word_Tic_Tac_Toe.\n" << "[5] Numerical_Tic_Tac_Toe.\n"
-                     << "[6] Misere_Tic_Tac_Toe.\n" << "[7] Ultimate_Tic_Tac_Toe.\n" << "[8] SUS.\n"
-                     << "[9] Exit.\nChoice:";
-                getline(cin, choice);
-                continue;
-            }
-            break;
-        }
-        cout << endl;
-        if (choice == "1") Pyramid_Tic_Tac_Toe();
-        else if (choice == "2") Four_In_A_Row();
-        else if (choice == "3") _5_X_5_Tic_Tac_Toe();
-        else if (choice == "4") Word_Tic_Tac_Toe();
-        else if (choice == "5") Numerical_Tic_Tac_Toe();
-        else if (choice == "6") Misere_Tic_Tac_Toe();
-        else if (choice == "7") Ultimate_Tic_Tac_Toe();
-        else if (choice == "8") SUS();
-        else if (choice == "9") break;
-    }
-
-    cout << "THANKS FOR USING OUR APPLICATION :)";
-    return 0;
 }
