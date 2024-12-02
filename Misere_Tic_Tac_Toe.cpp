@@ -26,6 +26,22 @@ using namespace std;
 string name1, name2;
 int countNum = 0;
 
+//--------------------------------------- HELPER FUNCTIONS
+
+void checkPlayerType(string &playerType, int num) {
+    cout << "\nWhat is player " << num << " type ?\n[1] Human.\n[2] Computer.\nChoice:";
+    getline(cin, playerType);
+    while (true) {
+        if (playerType != "1" && playerType != "2") {
+            cout << "Please enter a valid choice!\n\n";
+            cout << "What is player " << num << " type ?\n[1] Human.\n[2] Computer.\nChoice:";
+            getline(cin, playerType);
+            continue;
+        }
+        return;
+    }
+}
+
 //--------------------------------------- CLASSES
 
 template<typename T>
