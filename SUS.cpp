@@ -2,7 +2,18 @@
 // ID: 20230054
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 1.0
+// Version: 2.0
+
+/*
+ * This is a simple implementation of the Four In A Row game.
+ * The game is played on a 3x3 board where each cell is filled with either 'S' or 'U'.
+ * The game is played between two players:
+    ** The first player has the symbol 'S'.
+    ** The second player has the symbol 'U'.
+ * The players take turns to place their symbol in an empty cell.
+ * The player who places "SUS" in a row, column, or diagonal wins the game.
+ * The game ends in a draw if all cells are filled and no player wins.
+*/
 
 //--------------------------------------- HEADERS
 
