@@ -22,6 +22,7 @@
 using namespace std;
 
 //--------------------------------------- GLOBAL VARIABLES
+
 set<int> fullColumns;
 
 //--------------------------------------- HELPER FUNCTIONS
@@ -38,17 +39,6 @@ void checkPlayerType(string &playerType, int num) {
         }
         return;
     }
-}
-
-void operator<<(ostream& out, set<int>& arr){
-    for (auto number : arr) {
-        if (number != *arr.rbegin()) cout << number << ", ";
-        else cout << number;
-    }
-}
-
-bool IsValidNumber(const string& str) {
-    return all_of(str.begin(), str.end(), ::isdigit);
 }
 
 //--------------------------------------- CLASSES
@@ -69,6 +59,7 @@ class Four_In_A_Row_Player : public Player<T> {
 public:
     Four_In_A_Row_Player(string name, T symbol);
     void getmove(int &x, int &y) override;
+    bool IsValidNumber(const string& str);
 };
 
 template<typename T>
@@ -211,6 +202,11 @@ bool Four_In_A_Row_Board<T>::is_draw() {
 template<typename T>
 bool Four_In_A_Row_Board<T>::game_is_over() {
     return (is_win() || is_draw());
+}
+
+template<typename T>
+bool Four_In_A_Row_Player<T>::IsValidNumber(const std::string &str) {
+    return all_of(str.begin(), str.end(), ::isdigit);
 }
 
 template<typename T>
