@@ -308,6 +308,7 @@ void Misere_Tic_Tac_Toe() {
     delete players[0];                                          // Delete players.
     delete players[1];
     cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
 //--------------------------------------- Ultimate_Tic_Tac_Toe
@@ -386,8 +387,6 @@ int main() {
         else if (choice == "7") Ultimate_Tic_Tac_Toe();
         else if (choice == "8") SUS();
         else if (choice == "9") break;
-
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 
     cout << "THANKS FOR USING OUR APPLICATION :)";
