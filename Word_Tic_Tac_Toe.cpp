@@ -2,7 +2,16 @@
 // ID: 20230054
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 2.0
+// Version: 3.0
+
+/*
+ * This is a simple implementation of the Word Tic Tac Toe game.
+ * The game is played on a 3x3 board where each cell is filled with a letter.
+ * The game is played between two players.
+ * The players take turns to place a letter in an empty cell.
+ * The player who places a word from the dictionary wins the game.
+ * The game ends in a draw if all cells are filled and no player wins.
+*/
 
 //--------------------------------------- HEADERS
 
