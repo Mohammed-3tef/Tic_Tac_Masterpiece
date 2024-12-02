@@ -2,7 +2,18 @@
 // ID: 20230054
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 1.0
+// Version: 3.0
+
+/*
+ * This is a simple implementation of the Pyramid Tic Tac Toe game.
+ * The game is played on a 3x5 pyramid where each cell is filled with either 'X' or 'O'.
+ * The game is played between two players:
+    ** The first player has the symbol 'X'.
+    ** The second player has the symbol 'O'.
+ * The players take turns to place a number in an empty cell.
+ * The player who places four symbols in a row, column, or diagonal loses the game.
+ * The game ends in a draw if all cells are filled and no player wins.
+*/
 
 //--------------------------------------- HEADERS
 
