@@ -192,6 +192,7 @@ void _5_X_5_Tic_Tac_Toe() {
     delete players[0];                                          // Delete players.
     delete players[1];
     cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
+    if (player1Type == "1" || player2Type == "1")std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
 //--------------------------------------- Word_Tic_Tac_Toe
@@ -308,7 +309,7 @@ void Misere_Tic_Tac_Toe() {
     delete players[0];                                          // Delete players.
     delete players[1];
     cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    if (player1Type == "1" || player2Type == "1")std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
 //--------------------------------------- Ultimate_Tic_Tac_Toe
