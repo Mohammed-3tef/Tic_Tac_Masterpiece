@@ -2,7 +2,7 @@
 // ID: 20231143
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 4.0
+// Version: 4.1
 
 /*
  * This is a simple implementation of the Numerical Tic Tac Toe game.
@@ -74,7 +74,7 @@ public:
 };
 
 //--------------------------------------- IMPLEMENTATION
-
+// ---------------------------- BOARD CLASS
 template<typename T>
 Numerical_Tic_Tac_Toe_Board<T>::Numerical_Tic_Tac_Toe_Board() {
     this->rows = 3;
@@ -88,6 +88,11 @@ Numerical_Tic_Tac_Toe_Board<T>::Numerical_Tic_Tac_Toe_Board() {
         }
     }
     this->n_moves = 0;
+    // Initialize the global variables for each new game.
+    firstPlayer = {1, 3, 5, 7, 9};
+    secondPlayer = {0, 2, 4, 6, 8};
+    firstPlayerTurn = true;
+    availablePositions.clear();
 }
 
 // Update the board with the new move
@@ -185,6 +190,8 @@ bool Numerical_Tic_Tac_Toe_Board<T>::game_is_over() {
     return (is_win() || is_draw());
 }
 
+// ---------------------------- PLAYER CLASS
+
 template<typename T>
 bool Numerical_Tic_Tac_Toe_Player<T>::IsValidNumber(const std::string &str) {
     return all_of(str.begin(), str.end(), ::isdigit);
@@ -260,6 +267,8 @@ void Numerical_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
 
 template<typename T>
 Numerical_Tic_Tac_Toe_Player<T>::Numerical_Tic_Tac_Toe_Player(string name, T symbol) : Player<T>(name, symbol) {}
+
+// ---------------------------- RANDOM PLAYER CLASS
 
 template<typename T>
 void Numerical_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
