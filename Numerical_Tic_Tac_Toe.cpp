@@ -51,10 +51,6 @@ void operator<<(ostream& out, set<int>& arr){
     }
 }
 
-bool IsValidNumber(const string& str) {
-    return all_of(str.begin(), str.end(), ::isdigit);
-}
-
 //--------------------------------------- CLASSES
 
 template<typename T>
@@ -77,6 +73,7 @@ class Numerical_Tic_Tac_Toe_Player : public Player<T> {
 public:
     Numerical_Tic_Tac_Toe_Player(string name, T symbol);
     void getmove(int &x, int &y) override;
+    bool IsValidNumber(const string& str);
 };
 
 template<typename T>
@@ -197,6 +194,11 @@ bool Numerical_Tic_Tac_Toe_Board<T>::is_draw() {
 template<typename T>
 bool Numerical_Tic_Tac_Toe_Board<T>::game_is_over() {
     return (is_win() || is_draw());
+}
+
+template<typename T>
+bool Numerical_Tic_Tac_Toe_Player<T>::IsValidNumber(const std::string &str) {
+    return all_of(str.begin(), str.end(), ::isdigit);
 }
 
 template<typename T>
