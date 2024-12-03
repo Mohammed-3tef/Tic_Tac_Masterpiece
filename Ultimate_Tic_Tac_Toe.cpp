@@ -144,7 +144,13 @@ bool Ultimate_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
 
     // Check if the small board is actually a TicTacToeBoard
     TicTacToeBoard* smallBoardPtr = dynamic_cast<TicTacToeBoard*>(smallBoards[smallX][smallY]);
-    if (smallBoardPtr != nullptr) { // If it's a valid TicTacToeBoard
+    if (smallBoardPtr != nullptr) {
+        // Ensure the small board is not already claimed
+        if (bigBoard[smallX][smallY] != 0) {
+            cout << "This board has already been claimed!" << endl;
+            return false;
+        }
+
         // Ensure move is valid within the smaller board
         if (smallBoardPtr->get_cell(cellX, cellY) == 0) {
             smallBoardPtr->update_board(cellX, cellY, symbol);
@@ -159,21 +165,21 @@ bool Ultimate_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
             return true;
         }
     }
+
     return false; // Return false if it's not a TicTacToeBoard or the move is invalid
 }
 
 template <typename T>
 void Ultimate_Tic_Tac_Toe_Board<T>::display_board() {
-    cout << "\nBig Board:\n";
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            cout << (bigBoard[i][j] == 0 ? '.' : bigBoard[i][j]) << " ";
-        }
-        cout << endl;
-    }
-    cout << "\nSmall Boards:\n";
+    int count = 1;
+    cout << "\nStatus:\n";
+    cout << "    1  2  3  4  5  6  7  8  9\n";
+    cout << "   ---------------------------\n";
     for (int i = 0; i < 3; i++) {
         for (int row = 0; row < 3; row++) {
+            cout<<count<<"  | ";
+            count++;
+
             for (int j = 0; j < 3; j++) {
                 for (int col = 0; col < 3; col++) {
                     // Check if the small board is actually a TicTacToeBoard
@@ -186,7 +192,7 @@ void Ultimate_Tic_Tac_Toe_Board<T>::display_board() {
             }
             cout << endl;
         }
-        cout << "-------------------------\n";
+        cout << "   ---------------------------\n";
     }
 }
 
@@ -197,12 +203,16 @@ bool Ultimate_Tic_Tac_Toe_Board<T>::is_win() {
     for (int i = 0; i < 3; i++) {
         if ((bigBoard[i][0] != 0 && bigBoard[i][0] == bigBoard[i][1] && bigBoard[i][1] == bigBoard[i][2]) || // Row
             (bigBoard[0][i] != 0 && bigBoard[0][i] == bigBoard[1][i] && bigBoard[1][i] == bigBoard[2][i])) { // Column
+            cout << "Player " << bigBoard[i][0] << " wins the game!" << endl; // Declare winner
+            over = true;
             return true;
         }
     }
     // Check diagonals
     if ((bigBoard[0][0] != 0 && bigBoard[0][0] == bigBoard[1][1] && bigBoard[1][1] == bigBoard[2][2]) ||
         (bigBoard[0][2] != 0 && bigBoard[0][2] == bigBoard[1][1] && bigBoard[1][1] == bigBoard[2][0])) {
+        cout << "Player " << bigBoard[1][1] << " wins the game!" << endl; // Declare winner
+        over = true;
         return true;
     }
     return false;
@@ -215,7 +225,7 @@ bool Ultimate_Tic_Tac_Toe_Board<T>::is_draw() {
 }
 template <typename T>
 bool Ultimate_Tic_Tac_Toe_Board<T>::game_is_over() {
-    return is_win() || is_draw();
+    return over || is_draw();
 }
 //--------------------------------------
 // Constructor for X_O_Player
@@ -233,14 +243,10 @@ void Ultimate_Tic_Tac_Toe_Player<T>::getmove(int& x, int& y) {
             cout << "Invalid input. Try again.\n";
             continue;
         }
-        int smallX = x / 3, smallY = y / 3;
-        if (this->bigBoard[smallX][smallY] != 0) {
-            cout << "Small board already won or full. Choose a valid cell.\n";
-            continue;
-        }
         break;
     }
 }
+
 
 // Constructor for X_O_Random_Player
 template <typename T>
