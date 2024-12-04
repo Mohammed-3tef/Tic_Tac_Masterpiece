@@ -2,7 +2,19 @@
 // ID: 20231189
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 1.0
+// Version: 3.0
+
+/*
+ * This is a simple implementation of the Ultimate Tic Tac Toe.
+ * The game is played on a 9x9 board where each cell is filled with either 'X' or 'O'.
+ * The game is played between two players:
+    ** The first player has the symbol 'X'.
+    ** The second player has the symbol 'O'.
+ * The players take turns to place their symbol in an empty cell.
+ * The player who places three symbols in a row, column, or diagonal in each small board and make a row, column, or 
+   diagonal in the big board wins the game.
+ * The game ends in a draw if all cells are filled and no player wins.
+*/
 
 //--------------------------------------- HEADERS
 
