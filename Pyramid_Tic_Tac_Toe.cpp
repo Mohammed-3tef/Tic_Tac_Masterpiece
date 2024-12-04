@@ -37,45 +37,6 @@ void checkPlayerType(string &playerType, int num) {
     }
 }
 
-vector<string> getFile() {
-    string fileContent, s = "", fileName;
-    stringstream content;
-    vector<string> lines;
-    cout << "\nPlease enter file name:";
-    while (true) {
-        getline(cin, fileName);                               // get file name and check the validity of format.
-        if (fileName.size() < 5) {
-            cout << "\nThe file name should be like this ----> (file name).txt\n";
-            cout << "Please enter a valid file name :";
-            continue;
-        }
-        if (fileName.substr(fileName.size() - 4, 4) != ".txt") {
-            cout << "\nThe file name should be like this ----> (file name).txt\n";
-            cout << "Please enter a valid file name :";
-            continue;
-        }
-        ifstream file(fileName);
-        if (!file.good()) {
-            cout << "\nThe file name should be like this ----> (file name).txt\n";
-            cout << "Please enter a valid file name :";
-            continue;
-        }
-        content << file.rdbuf();
-        break;
-    }
-    fileContent = content.str();
-    for (char character: fileContent) {
-        if (character == '\n') {
-            lines.push_back(s);
-            s = "";
-        } else {
-            s += character;
-        }
-    }
-    lines.push_back(s);
-    return lines;
-}
-
 //--------------------------------------- CLASSES
 
 class Pyramid_Tic_Tac_Toe_Board : public Board<char> {
