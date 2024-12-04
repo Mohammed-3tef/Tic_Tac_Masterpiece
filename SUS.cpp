@@ -2,10 +2,10 @@
 // ID: 20230054
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 2.0
+// Version: 3.0
 
 /*
- * This is a simple implementation of the Four In A Row game.
+ * This is a simple implementation of the SUS game.
  * The game is played on a 3x3 board where each cell is filled with either 'S' or 'U'.
  * The game is played between two players:
     ** The first player has the symbol 'S'.
@@ -39,37 +39,34 @@ void checkPlayerType(string &playerType, int num) {
 
 //--------------------------------------- CLASSES
 
-template<typename T>
-class SUS_Board : public Board<T> {
+class SUS_Board : public Board<char> {
 private:
     bool over = false;
 public:
     SUS_Board();
-    bool update_board(int x, int y, T symbol) override;
+    bool update_board(int x, int y, char symbol) override;
     void display_board() override;
     bool is_win() override;
     bool is_draw() override;
     bool game_is_over() override;
 };
 
-template<typename T>
-class SUS_Player : public Player<T> {
+class SUS_Player : public Player<char> {
 public:
-    SUS_Player(string name, T symbol);
+    SUS_Player(string name, char symbol);
     void getmove(int &x, int &y) override;
 };
 
-template<typename T>
-class SUS_Random_Player : public RandomPlayer<T> {
+class SUS_Random_Player : public RandomPlayer<char> {
 public:
-    SUS_Random_Player(T symbol);
+    SUS_Random_Player(char symbol);
     void getmove(int &x, int &y) override;
 };
 
 //--------------------------------------- IMPLEMENTATION
+// ---------------------------- BOARD CLASS
 
-template<typename T>
-SUS_Board<T>::SUS_Board() {
+SUS_Board::SUS_Board() {
     this->rows = this->columns = 3;
     this->board = new char *[this->rows];
     for (int i = 0; i < this->rows; i++) {
@@ -81,8 +78,7 @@ SUS_Board<T>::SUS_Board() {
     this->n_moves = 0;
 }
 
-template<typename T>
-bool SUS_Board<T>::update_board(int x, int y, T symbol) {
+bool SUS_Board::update_board(int x, int y, char symbol) {
     if (!(x < 0 || x >= this->rows || y < 0 || y >= this->columns) && (this->board[x][y] == 0)) {
         this->n_moves++;
         this->board[x][y] = toupper(symbol);
@@ -91,8 +87,7 @@ bool SUS_Board<T>::update_board(int x, int y, T symbol) {
     return false;
 }
 
-template<typename T>
-void SUS_Board<T>::display_board() {
+void SUS_Board::display_board() {
     for (int i = 0; i < this->rows; i++) {
         cout << "\n   ___________________\n";
         cout << i + 1 << "  " << "|  ";
@@ -103,8 +98,7 @@ void SUS_Board<T>::display_board() {
     cout << "\n   ___________________\n      1     2     3\n\n";
 }
 
-template<typename T>
-bool SUS_Board<T>::is_win() {
+bool SUS_Board::is_win() {
     vector<string> patterns;
     for (int i = 0; i < 3; i++) {                                          // Check winning horizontally and vertically.
         string row, col;
@@ -132,19 +126,18 @@ bool SUS_Board<T>::is_win() {
     return false;
 }
 
-template<typename T>
-bool SUS_Board<T>::is_draw() {
+bool SUS_Board::is_draw() {
     if (this->n_moves == 9) return true;                                        // Check board is full.
     return false;
 }
 
-template<typename T>
-bool SUS_Board<T>::game_is_over() {
+bool SUS_Board::game_is_over() {
     return over;
 }
 
-template<typename T>
-void SUS_Player<T>::getmove(int &x, int &y) {
+// ---------------------------- PLAYER CLASS
+
+void SUS_Player::getmove(int &x, int &y) {
     cout << "It's " << this->name << " turn\n";
     string dim1, dim2;
     cout << "\nPlease enter the row:";                                          // Get move.
@@ -182,17 +175,16 @@ void SUS_Player<T>::getmove(int &x, int &y) {
     y = stoi(dim2) - 1;
 }
 
-template<typename T>
-SUS_Player<T>::SUS_Player(std::string name, T symbol) : Player<T>(name, symbol) {}
+SUS_Player::SUS_Player(std::string name, char symbol) : Player<char>(name, symbol) {}
 
-template<typename T>
-void SUS_Random_Player<T>::getmove(int &x, int &y) {
+// ---------------------------- RANDOM PLAYER CLASS
+
+void SUS_Random_Player::getmove(int &x, int &y) {
     x = rand() % this->dimension;                                       // Random number between 0 and 2
     y = rand() % this->dimension;
 }
 
-template<typename T>
-SUS_Random_Player<T>::SUS_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
+SUS_Random_Player::SUS_Random_Player(char symbol) : RandomPlayer<char>(symbol) {
     this->dimension = 3;
     this->name = "Random Computer Player";
 }
@@ -203,24 +195,24 @@ int main() {
     cout << "<--------- Welcome To SUS --------->\n";
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
-    SUS_Board<char> *gameBoard = new SUS_Board<char>();
+    SUS_Board *gameBoard = new SUS_Board();
 
     checkPlayerType(player1Type, 1);                // Get info of player 1.
     if (player1Type == "1") {
         cout << "Please enter Player 1 name:";
         getline(cin, player1Name);
-        players[0] = new SUS_Player<char>(player1Name, 'S');
+        players[0] = new SUS_Player(player1Name, 'S');
     } else {
-        players[0] = new SUS_Random_Player<char>('S');
+        players[0] = new SUS_Random_Player('S');
     }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
     if (player2Type == "1") {
         cout << "Please enter Player 2 name:";
         getline(cin, player2Name);
-        players[1] = new SUS_Player<char>(player2Name, 'U');
+        players[1] = new SUS_Player(player2Name, 'U');
     } else {
-        players[1] = new SUS_Random_Player<char>('U');
+        players[1] = new SUS_Random_Player('U');
     }
 
     GameManager<char> SUS_Game(gameBoard, players);
@@ -229,5 +221,5 @@ int main() {
     delete gameBoard;                                           // Delete board.
     delete players[0];                                          // Delete players.
     delete players[1];
-    cout << "\nThanks For Playing My Game :)";
+    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
 }
