@@ -76,14 +76,13 @@ vector<string> getFile() {
 
 //--------------------------------------- CLASSES
 
-template<typename T>
-class Word_Tic_Tac_Toe_Board : public Board<T> {
+class Word_Tic_Tac_Toe_Board : public Board<char> {
 private:
     vector<string> dic;
     bool over = false;
 public:
     Word_Tic_Tac_Toe_Board();
-    bool update_board(int x, int y, T symbol) override;
+    bool update_board(int x, int y, char symbol) override;
     void display_board() override;
     bool is_win() override;
     bool is_draw() override;
@@ -91,25 +90,23 @@ public:
     void setDic(vector<string> lines);
 };
 
-template<typename T>
-class Word_Tic_Tac_Toe_Player : public Player<T> {
+class Word_Tic_Tac_Toe_Player : public Player<char> {
 public:
-    Word_Tic_Tac_Toe_Player(string name, T symbol);
+    Word_Tic_Tac_Toe_Player(string name, char symbol);
     void getmove(int &x, int &y) override;
     char getChar();
 };
 
-template<typename T>
-class Word_Tic_Tac_Toe_Random_Player : public RandomPlayer<T> {
+class Word_Tic_Tac_Toe_Random_Player : public RandomPlayer<char> {
 public:
-    Word_Tic_Tac_Toe_Random_Player(T symbol);
+    Word_Tic_Tac_Toe_Random_Player(char symbol);
     void getmove(int &x, int &y) override;
 };
 
 //--------------------------------------- IMPLEMENTATION
+// ---------------------------- BOARD CLASS
 
-template<typename T>
-Word_Tic_Tac_Toe_Board<T>::Word_Tic_Tac_Toe_Board() {
+Word_Tic_Tac_Toe_Board::Word_Tic_Tac_Toe_Board() {
     this->rows = this->columns = 3;
     this->board = new char *[this->rows];
     for (int i = 0; i < this->rows; i++) {
@@ -121,8 +118,7 @@ Word_Tic_Tac_Toe_Board<T>::Word_Tic_Tac_Toe_Board() {
     this->n_moves = 0;
 }
 
-template<typename T>
-bool Word_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
+bool Word_Tic_Tac_Toe_Board::update_board(int x, int y, char symbol) {
     if (!(x < 0 || x >= this->rows || y < 0 || y >= this->columns) && (this->board[x][y] == 0)) {
         this->n_moves++;
         this->board[x][y] = toupper(symbol);
@@ -131,13 +127,11 @@ bool Word_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
     return false;
 }
 
-template<typename T>
-void Word_Tic_Tac_Toe_Board<T>::setDic(vector<std::string> lines) {
+void Word_Tic_Tac_Toe_Board::setDic(vector<std::string> lines) {
     dic = lines;
 }
 
-template<typename T>
-void Word_Tic_Tac_Toe_Board<T>::display_board() {
+void Word_Tic_Tac_Toe_Board::display_board() {
     for (int i = 0; i < this->rows; i++) {
         cout << "\n   ___________________\n";
         cout << i + 1 << "  " << "|  ";
@@ -148,8 +142,7 @@ void Word_Tic_Tac_Toe_Board<T>::display_board() {
     cout << "\n   ___________________\n      1     2     3\n\n";
 }
 
-template<typename T>
-bool Word_Tic_Tac_Toe_Board<T>::is_win() {
+bool Word_Tic_Tac_Toe_Board::is_win() {
     vector<string> patterns;
     for (int i = 0; i < 3; i++) {                                          // Check winning horizontally and vertically.
         string row, col;
@@ -177,19 +170,18 @@ bool Word_Tic_Tac_Toe_Board<T>::is_win() {
     return false;
 }
 
-template<typename T>
-bool Word_Tic_Tac_Toe_Board<T>::is_draw() {
+bool Word_Tic_Tac_Toe_Board::is_draw() {
     if (this->n_moves == 9) return true;                                        // Check board is full.
     return false;
 }
 
-template<typename T>
-bool Word_Tic_Tac_Toe_Board<T>::game_is_over() {
+bool Word_Tic_Tac_Toe_Board::game_is_over() {
     return over;
 }
 
-template<typename T>
-char Word_Tic_Tac_Toe_Player<T>::getChar() {
+// ---------------------------- PLAYER CLASS
+
+char Word_Tic_Tac_Toe_Player::getChar() {
     string character;
     char c;
     cout << "Please enter a char:";
@@ -200,7 +192,8 @@ char Word_Tic_Tac_Toe_Player<T>::getChar() {
             getline(cin, character);
             continue;
         }
-        if (character[0] < 65 || (character[0] > 90 && character[0] < 97) || character[0] > 122) { // Check input is a char.
+        if (character[0] < 65 || (character[0] > 90 && character[0] < 97) ||
+            character[0] > 122) { // Check input is a char.
             cout << "Please enter a valid char:";
             getline(cin, character);
             continue;
@@ -211,8 +204,7 @@ char Word_Tic_Tac_Toe_Player<T>::getChar() {
     return c;
 }
 
-template<typename T>
-void Word_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
+void Word_Tic_Tac_Toe_Player::getmove(int &x, int &y) {
     cout << "It's " << this->name << " turn\n";
     string dim1, dim2;
     cout << "\nPlease enter the row:";                                          // Get move.
@@ -252,11 +244,11 @@ void Word_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
     this->symbol = c;
 }
 
-template<typename T>
-Word_Tic_Tac_Toe_Player<T>::Word_Tic_Tac_Toe_Player(std::string name, T symbol) : Player<T>(name, symbol) {}
+Word_Tic_Tac_Toe_Player::Word_Tic_Tac_Toe_Player(std::string name, char symbol) : Player<char>(name, symbol) {}
 
-template<typename T>
-void Word_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
+// ---------------------------- RANDOM PLAYER CLASS
+
+void Word_Tic_Tac_Toe_Random_Player::getmove(int &x, int &y) {
     x = rand() % this->dimension;                                       // Random number between 0 and 2
     y = rand() % this->dimension;
     int num = rand() % 26;                                              // Generate a random char.
@@ -264,8 +256,7 @@ void Word_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
     this->symbol = static_cast<char>(num);
 }
 
-template<typename T>
-Word_Tic_Tac_Toe_Random_Player<T>::Word_Tic_Tac_Toe_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
+Word_Tic_Tac_Toe_Random_Player::Word_Tic_Tac_Toe_Random_Player(char symbol) : RandomPlayer<char>(symbol) {
     this->dimension = 3;
     this->name = "Random Computer Player";
 }
@@ -276,7 +267,7 @@ int main() {
     cout << "<--------- Welcome To Word Tic Tac Toe --------->\n";
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
-    Word_Tic_Tac_Toe_Board<char> *gameBoard = new Word_Tic_Tac_Toe_Board<char>();
+    Word_Tic_Tac_Toe_Board *gameBoard = new Word_Tic_Tac_Toe_Board();
     vector<string> lines = getFile();
     gameBoard->setDic(lines);
 
@@ -284,18 +275,18 @@ int main() {
     if (player1Type == "1") {
         cout << "Please enter Player 1 name:";
         getline(cin, player1Name);
-        players[0] = new Word_Tic_Tac_Toe_Player<char>(player1Name, 'a');
+        players[0] = new Word_Tic_Tac_Toe_Player(player1Name, 'a');
     } else {
-        players[0] = new Word_Tic_Tac_Toe_Random_Player<char>('a');
+        players[0] = new Word_Tic_Tac_Toe_Random_Player('a');
     }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
     if (player2Type == "1") {
         cout << "Please enter Player 2 name:";
         getline(cin, player2Name);
-        players[1] = new Word_Tic_Tac_Toe_Player<char>(player2Name, 'a');
+        players[1] = new Word_Tic_Tac_Toe_Player(player2Name, 'a');
     } else {
-        players[1] = new Word_Tic_Tac_Toe_Random_Player<char>('a');
+        players[1] = new Word_Tic_Tac_Toe_Random_Player('a');
     }
 
     GameManager<char> Pyramid_Tic_Tac_Toe_Game(gameBoard, players);
@@ -304,5 +295,5 @@ int main() {
     delete gameBoard;                                           // Delete board.
     delete players[0];                                          // Delete players.
     delete players[1];
-    cout << "\nThanks For Playing My Game :)";
+    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
 }
