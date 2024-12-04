@@ -43,43 +43,40 @@ void checkPlayerType(string &playerType, int num) {
 
 //--------------------------------------- CLASSES
 
-template<typename T>
-class Four_In_A_Row_Board : public Board<T> {
+class Four_In_A_Row_Board : public Board<char> {
 public:
     Four_In_A_Row_Board();
-    bool update_board(int x, int y, T symbol) override;
+    bool update_board(int x, int y, char symbol) override;
     void display_board() override;
     bool is_win() override;
     bool is_draw() override;
     bool game_is_over() override;
 };
 
-template<typename T>
-class Four_In_A_Row_Player : public Player<T> {
+class Four_In_A_Row_Player : public Player<char> {
 public:
-    Four_In_A_Row_Player(string name, T symbol);
+    Four_In_A_Row_Player(string name, char symbol);
     void getmove(int &x, int &y) override;
-    bool IsValidNumber(const string& str);
+    bool IsValidNumber(const string &str);
 };
 
-template<typename T>
-class Four_In_A_Row_Random_Player : public RandomPlayer<T> {
+class Four_In_A_Row_Random_Player : public RandomPlayer<char> {
 public:
-    explicit Four_In_A_Row_Random_Player(T symbol);
+    explicit Four_In_A_Row_Random_Player(char symbol);
     void getmove(int &x, int &y) override;
 };
 
 //--------------------------------------- IMPLEMENTATION
+// ---------------------------- BOARD CLASS
 
 // Constructor for the Four_In_A_Row_Board
-template<typename T>
-Four_In_A_Row_Board<T>::Four_In_A_Row_Board() {
+Four_In_A_Row_Board::Four_In_A_Row_Board() {
     this->rows = 6;
     this->columns = 7;
-    this->board = new T*[this->rows];
+    this->board = new char *[this->rows];
     // Initialize the board with zeros
     for (int i = 0; i < this->rows; i++) {
-        this->board[i] = new T[this->columns];
+        this->board[i] = new char[this->columns];
         for (int j = 0; j < this->columns; j++) {
             this->board[i][j] = 0;  // Initialize with zero
         }
@@ -88,8 +85,7 @@ Four_In_A_Row_Board<T>::Four_In_A_Row_Board() {
 }
 
 // Update the board with the new move
-template<typename T>
-bool Four_In_A_Row_Board<T>::update_board(int x, int y, T symbol) {
+bool Four_In_A_Row_Board::update_board(int x, int y, char symbol) {
     // Validate move
     if (y < 0 || y >= this->columns) {
         cout << "Invalid column! Try again.\n";
@@ -108,8 +104,7 @@ bool Four_In_A_Row_Board<T>::update_board(int x, int y, T symbol) {
     return false;
 }
 
-template<typename T>
-void Four_In_A_Row_Board<T>::display_board() {
+void Four_In_A_Row_Board::display_board() {
     cout << "\n    1   2   3   4   5   6   7\n";
     cout << "  -----------------------------\n";
 
@@ -119,8 +114,7 @@ void Four_In_A_Row_Board<T>::display_board() {
             cout << " " << setw(1);
             if (this->board[i][j] == 0) {
                 cout << " ";
-            }
-            else cout << this->board[i][j] ;
+            } else cout << this->board[i][j];
             cout << " |";
         }
         cout << "\n  -----------------------------\n";
@@ -128,14 +122,13 @@ void Four_In_A_Row_Board<T>::display_board() {
     cout << endl;
 }
 
-template<typename T>
-bool Four_In_A_Row_Board<T>::is_win() {
+bool Four_In_A_Row_Board::is_win() {
     const int winCondition = 4;     // Number of consecutive symbols to win
 
     // i -> row, j -> column, k -> number of consecutive symbols;
     for (int i = 0; i < this->rows; i++) {
         for (int j = 0; j < this->columns; j++) {
-            T symbol = this->board[i][j];
+            char symbol = this->board[i][j];
             if (symbol == 0) continue;      // Skip empty cells
 
             // Check horizontally
@@ -194,28 +187,27 @@ bool Four_In_A_Row_Board<T>::is_win() {
     return false;
 }
 
-template<typename T>
-bool Four_In_A_Row_Board<T>::is_draw() {
+bool Four_In_A_Row_Board::is_draw() {
     return (this->n_moves == 42 && !is_win());
 }
 
-template<typename T>
-bool Four_In_A_Row_Board<T>::game_is_over() {
+bool Four_In_A_Row_Board::game_is_over() {
     return (is_win() || is_draw());
 }
 
-template<typename T>
-bool Four_In_A_Row_Player<T>::IsValidNumber(const std::string &str) {
+// ---------------------------- PLAYER CLASS
+
+bool Four_In_A_Row_Player::IsValidNumber(const std::string &str) {
     return all_of(str.begin(), str.end(), ::isdigit);
 }
 
-template<typename T>
-void Four_In_A_Row_Player<T>::getmove(int &x, int &y) {
+void Four_In_A_Row_Player::getmove(int &x, int &y) {
     cout << this->name << ", it's your turn.\n";
 
     while (true) {
         cout << "Enter the column number (1-7) :";
-        string yAsString; getline(cin, yAsString);
+        string yAsString;
+        getline(cin, yAsString);
 
         // Validate the input
         if (!IsValidNumber(yAsString) || yAsString.empty() || yAsString.empty()) {
@@ -230,12 +222,12 @@ void Four_In_A_Row_Player<T>::getmove(int &x, int &y) {
 }
 
 // Constructor for the Four_In_A_Row_Player
-template<typename T>
-Four_In_A_Row_Player<T>::Four_In_A_Row_Player(string name, T symbol) : Player<T>(name, symbol) {}
+Four_In_A_Row_Player::Four_In_A_Row_Player(string name, char symbol) : Player<char>(name, symbol) {}
+
+// ---------------------------- RANDOM PLAYER CLASS
 
 // Get a random move
-template<typename T>
-void Four_In_A_Row_Random_Player<T>::getmove(int &x, int &y) {
+void Four_In_A_Row_Random_Player::getmove(int &x, int &y) {
     y = rand() % this->dimension;  // Random number between 0 and 6
     // Check if column is full
     while (fullColumns.find(y) != fullColumns.end()) {
@@ -247,8 +239,7 @@ void Four_In_A_Row_Random_Player<T>::getmove(int &x, int &y) {
 }
 
 // Constructor for the Four_In_A_Row_Random_Player
-template<typename T>
-Four_In_A_Row_Random_Player<T>::Four_In_A_Row_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
+Four_In_A_Row_Random_Player::Four_In_A_Row_Random_Player(char symbol) : RandomPlayer<char>(symbol) {
     this->dimension = 7;
     this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(nullptr)));  // Seed the random number generator
@@ -259,37 +250,35 @@ Four_In_A_Row_Random_Player<T>::Four_In_A_Row_Random_Player(T symbol) : RandomPl
 int main() {
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
-    auto *gameBoard = new Four_In_A_Row_Board<char>();
-
+    auto *gameBoard = new Four_In_A_Row_Board();
     cout << "<--------- Welcome To Four In A Row --------->\n";
-    checkPlayerType(player1Type, 1);                // Get info of player 1.
-    cout << "Please Enter Player 1 name :";
-    getline(cin, player1Name);
 
+    checkPlayerType(player1Type, 1);                // Get info of player 1.
     // Create player 1
     if (player1Type == "1") {
-        players[0] = new Four_In_A_Row_Player<char>(player1Name, 'X');
+        cout << "Please Enter Player 1 name :";
+        getline(cin, player1Name);
+        players[0] = new Four_In_A_Row_Player(player1Name, 'X');
     } else {
-        players[0] = new Four_In_A_Row_Random_Player<char>('X');
+        players[0] = new Four_In_A_Row_Random_Player('X');
     }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
-    cout << "Please Enter Player 2 name :";
-    getline(cin, player2Name);
-
     // Create player 2
     if (player2Type == "1") {
-        players[1] = new Four_In_A_Row_Player<char>(player2Name,'O');
-    }
-    else {
-        players[1] = new Four_In_A_Row_Random_Player<char>('O');
+        cout << "Please Enter Player 2 name :";
+        getline(cin, player2Name);
+        players[1] = new Four_In_A_Row_Player(player2Name, 'O');
+    } else {
+        players[1] = new Four_In_A_Row_Random_Player('O');
     }
 
     // Create the game manager
     GameManager<char> Four_In_A_Row_Game(gameBoard, players);
     Four_In_A_Row_Game.run();
 
-    cout << "\n\tThanks For Playing My Game :)" << endl;
-    delete gameBoard;
-    return 0;
+    delete gameBoard;                                           // Delete board.
+    delete players[0];                                          // Delete players.
+    delete players[1];
+    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
 }
