@@ -151,28 +151,28 @@ void Four_In_A_Row() {
 
 // ---------------------------- Five_By_Five_Tic_Tac_Toe
 
-void _5_X_5_Tic_Tac_Toe() {
+void Five_By_Five_Tic_Tac_Toe() {
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
-    auto *gameBoard = new FivebyFive_Tic_Tac_Toe_Board();
+    auto *gameBoard = new Five_By_Five_Tic_Tac_Toe_Board();
     cout << "<--------- Welcome To 5x5 Tic Tac Toe --------->\n";
 
     checkPlayerType(player1Type, 1);                // Get info of player 1.
     if (player1Type == "1") {
         cout << "Please enter Player 1 name:";
         getline(cin, player1Name);
-        players[0] = new FivebyFive_Tic_Tac_Toe_Player(player1Name, 'X');
+        players[0] = new Five_By_Five_Tic_Tac_Toe_Player(player1Name, 'X');
     } else {
-        players[0] = new FivebyFive_Tic_Tac_Toe_Random_Player('X');
+        players[0] = new Five_By_Five_Tic_Tac_Toe_Random_Player('X');
     }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
     if (player2Type == "1") {
         cout << "Please enter Player 2 name:";
         getline(cin, player2Name);
-        players[1] = new FivebyFive_Tic_Tac_Toe_Player(player2Name, 'O');
+        players[1] = new Five_By_Five_Tic_Tac_Toe_Player(player2Name, 'O');
     } else {
-        players[1] = new FivebyFive_Tic_Tac_Toe_Random_Player('O');
+        players[1] = new Five_By_Five_Tic_Tac_Toe_Random_Player('O');
     }
 
     GameManager<char> FivebyFive_Tic_Tac_Toe_Game(gameBoard, players);
@@ -402,7 +402,7 @@ int main() {
         cout << endl;
         if (choice == "1") Pyramid_Tic_Tac_Toe();
         else if (choice == "2") Four_In_A_Row();
-        else if (choice == "3") _5_X_5_Tic_Tac_Toe();
+        else if (choice == "3") Five_By_Five_Tic_Tac_Toe();
         else if (choice == "4") Word_Tic_Tac_Toe();
         else if (choice == "5") Numerical_Tic_Tac_Toe();
         else if (choice == "6") Misere_Tic_Tac_Toe();
