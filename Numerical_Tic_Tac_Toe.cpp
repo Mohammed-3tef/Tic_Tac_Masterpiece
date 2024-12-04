@@ -2,7 +2,7 @@
 // ID: 20231143
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 4.0
+// Version: 4.1
 
 /*
  * This is a simple implementation of the Numerical Tic Tac Toe game.
@@ -53,47 +53,45 @@ void operator<<(ostream& out, set<int>& arr){
 
 //--------------------------------------- CLASSES
 
-template<typename T>
-class Numerical_Tic_Tac_Toe_Board : public Board<T> {
+class Numerical_Tic_Tac_Toe_Board : public Board<char> {
 private:
     int row_sums[3] = {0};      // Sum of each row
     int col_sums[3] = {0};      // Sum of each column
     int diag_sum[2] = {0};      // Sum of diagonals
 public:
     Numerical_Tic_Tac_Toe_Board();
-    bool update_board(int x, int y, T symbol) override;
+    bool update_board(int x, int y, char symbol) override;
     void display_board() override;
     bool is_win() override;
     bool is_draw() override;
     bool game_is_over() override;
 };
 
-template<typename T>
-class Numerical_Tic_Tac_Toe_Player : public Player<T> {
+class Numerical_Tic_Tac_Toe_Player : public Player<char> {
 public:
-    Numerical_Tic_Tac_Toe_Player(string name, T symbol);
+    Numerical_Tic_Tac_Toe_Player(string name, char symbol);
     void getmove(int &x, int &y) override;
-    bool IsValidNumber(const string& str);
+    bool IsValidNumber(const string &str);
 };
 
-template<typename T>
-class Numerical_Tic_Tac_Toe_Random_Player : public RandomPlayer<T> {
+class Numerical_Tic_Tac_Toe_Random_Player : public RandomPlayer<char> {
     vector<int> availableNumbers;
 public:
-    explicit Numerical_Tic_Tac_Toe_Random_Player(T symbol);
+    explicit Numerical_Tic_Tac_Toe_Random_Player(char symbol);
     void getmove(int &x, int &y) override;
 };
 
 //--------------------------------------- IMPLEMENTATION
 
-template<typename T>
-Numerical_Tic_Tac_Toe_Board<T>::Numerical_Tic_Tac_Toe_Board() {
+// ---------------------------- BOARD CLASS
+
+Numerical_Tic_Tac_Toe_Board::Numerical_Tic_Tac_Toe_Board() {
     this->rows = 3;
     this->columns = 3;
-    this->board = new T*[this->rows];
+    this->board = new char *[this->rows];
     // Initialize the board with zeros
     for (int i = 0; i < this->rows; i++) {
-        this->board[i] = new T[this->columns];
+        this->board[i] = new char[this->columns];
         for (int j = 0; j < this->columns; j++) {
             this->board[i][j] = 0;  // Initialize with zero
         }
@@ -107,8 +105,7 @@ Numerical_Tic_Tac_Toe_Board<T>::Numerical_Tic_Tac_Toe_Board() {
 }
 
 // Update the board with the new move
-template<typename T>
-bool Numerical_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
+bool Numerical_Tic_Tac_Toe_Board::update_board(int x, int y, char symbol) {
     // Validate move
     if (x < 0 || x >= this->rows || y < 0 || y >= this->columns || this->board[x][y] != 0) {
         cout << "Invalid move. Try again.\n";
@@ -135,8 +132,7 @@ bool Numerical_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
     return true;
 }
 
-template<typename T>
-void Numerical_Tic_Tac_Toe_Board<T>::display_board() {
+void Numerical_Tic_Tac_Toe_Board::display_board() {
     cout << "\n     1   2   3\n";
     cout << "   -------------\n";
 
@@ -155,8 +151,7 @@ void Numerical_Tic_Tac_Toe_Board<T>::display_board() {
     cout << endl;
 }
 
-template<typename T>
-bool Numerical_Tic_Tac_Toe_Board<T>::is_win() {
+bool Numerical_Tic_Tac_Toe_Board::is_win() {
     // Check horizontal
     for (int i = 0; i < this->rows; i++) {
         int countRowCells = 0;          // Reset for each row
@@ -191,25 +186,21 @@ bool Numerical_Tic_Tac_Toe_Board<T>::is_win() {
     return false;
 }
 
-template<typename T>
-bool Numerical_Tic_Tac_Toe_Board<T>::is_draw() {
+bool Numerical_Tic_Tac_Toe_Board::is_draw() {
     return (this->n_moves == 9 && !is_win());
 }
 
-template<typename T>
-bool Numerical_Tic_Tac_Toe_Board<T>::game_is_over() {
+bool Numerical_Tic_Tac_Toe_Board::game_is_over() {
     return (is_win() || is_draw());
 }
 
 // ---------------------------- PLAYER CLASS
 
-template<typename T>
-bool Numerical_Tic_Tac_Toe_Player<T>::IsValidNumber(const std::string &str) {
+bool Numerical_Tic_Tac_Toe_Player::IsValidNumber(const std::string &str) {
     return all_of(str.begin(), str.end(), ::isdigit);
 }
 
-template<typename T>
-void Numerical_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
+void Numerical_Tic_Tac_Toe_Player::getmove(int &x, int &y) {
     string numberAsString;
     cout << this->name << ", it's your turn.\n";
 
@@ -226,12 +217,11 @@ void Numerical_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
             continue;
         }
 
-        // Check if the number is available
+            // Check if the number is available
         else if (firstPlayer.find(stoi(numberAsString)) == firstPlayer.end()) {
             cout << "Number already used. Try again.\n";
             continue;
-        }
-        else break;
+        } else break;
     }
 
     // Second player's turn.
@@ -247,12 +237,11 @@ void Numerical_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
             continue;
         }
 
-        // Check if the number is available
+            // Check if the number is available
         else if (secondPlayer.find(stoi(numberAsString)) == secondPlayer.end()) {
             cout << "Number already used. Try again.\n";
             continue;
-        }
-        else break;
+        } else break;
     }
 
     this->symbol = numberAsString[0] - '0';     // Convert to integer
@@ -260,9 +249,11 @@ void Numerical_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
     // Get the row and column numbers
     while (true) {
         cout << "Enter the row number (1-3) :";
-        string xAsString; getline(cin, xAsString);
+        string xAsString;
+        getline(cin, xAsString);
         cout << "Enter the column number (1-3) :";
-        string yAsString; getline(cin, yAsString);
+        string yAsString;
+        getline(cin, yAsString);
 
         // Validate the input
         if (!IsValidNumber(xAsString) || !IsValidNumber(yAsString) || xAsString.empty() || yAsString.empty()) {
@@ -270,19 +261,17 @@ void Numerical_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
             continue;
         }
 
-        x = stoi(xAsString) -1;    // Convert to zero-based indexing
-        y = stoi(yAsString) -1;    // Convert to zero-based indexing
+        x = stoi(xAsString) - 1;    // Convert to zero-based indexing
+        y = stoi(yAsString) - 1;    // Convert to zero-based indexing
         break;
     }
 }
 
-template<typename T>
-Numerical_Tic_Tac_Toe_Player<T>::Numerical_Tic_Tac_Toe_Player(string name, T symbol) : Player<T>(name, symbol) {}
+Numerical_Tic_Tac_Toe_Player::Numerical_Tic_Tac_Toe_Player(string name, char symbol) : Player<char>(name, symbol) {}
 
 // ---------------------------- RANDOM PLAYER CLASS
 
-template<typename T>
-void Numerical_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
+void Numerical_Tic_Tac_Toe_Random_Player::getmove(int &x, int &y) {
     int randomIndex = rand() % this->availableNumbers.size();
     this->symbol = this->availableNumbers[randomIndex];
 
@@ -302,8 +291,7 @@ void Numerical_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
     this->availableNumbers.erase(this->availableNumbers.begin() + randomIndex);
 }
 
-template<typename T>
-Numerical_Tic_Tac_Toe_Random_Player<T>::Numerical_Tic_Tac_Toe_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
+Numerical_Tic_Tac_Toe_Random_Player::Numerical_Tic_Tac_Toe_Random_Player(char symbol) : RandomPlayer<char>(symbol) {
     this->dimension = 3;
     this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(nullptr)));  // Seed the random number generator
@@ -320,35 +308,33 @@ Numerical_Tic_Tac_Toe_Random_Player<T>::Numerical_Tic_Tac_Toe_Random_Player(T sy
 int main() {
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
-    auto *gameBoard = new Numerical_Tic_Tac_Toe_Board<char>();
-
+    auto *gameBoard = new Numerical_Tic_Tac_Toe_Board();
     cout << "<--------- Welcome To Numerical Tic Tac Toe --------->\n";
-    checkPlayerType(player1Type, 1);                // Get info of player 1.
-    cout << "Please enter Player 1 name:";
-    getline(cin, player1Name);
 
+    checkPlayerType(player1Type, 1);                // Get info of player 1.
     if (player1Type == "1") {
-        players[0] = new Numerical_Tic_Tac_Toe_Player<char>(player1Name, '1');
+        cout << "Please enter Player 1 name:";
+        getline(cin, player1Name);
+        players[0] = new Numerical_Tic_Tac_Toe_Player(player1Name, '1');
     } else {
-        players[0] = new Numerical_Tic_Tac_Toe_Random_Player<char>('1');
+        players[0] = new Numerical_Tic_Tac_Toe_Random_Player('1');
     }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
-    cout << "Please enter Player 2 name:";
-    getline(cin, player2Name);
-
     if (player2Type == "1") {
-        players[1] = new Numerical_Tic_Tac_Toe_Player<char>(player2Name,'2');
-    }
-    else {
-        players[1] = new Numerical_Tic_Tac_Toe_Random_Player<char>('2');
+        cout << "Please enter Player 2 name:";
+        getline(cin, player2Name);
+        players[1] = new Numerical_Tic_Tac_Toe_Player(player2Name, '2');
+    } else {
+        players[1] = new Numerical_Tic_Tac_Toe_Random_Player('2');
     }
 
     // Create the game manager
     GameManager<char> Numerical_Tic_Tac_Toe_Game(gameBoard, players);
     Numerical_Tic_Tac_Toe_Game.run();
 
-    cout << "\n\tThanks For Playing My Game :)" << endl;
-    delete gameBoard;
-    return 0;
+    delete gameBoard;                                           // Delete board.
+    delete players[0];                                          // Delete players.
+    delete players[1];
+    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
 }
