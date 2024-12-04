@@ -72,7 +72,7 @@ public:
 
 //--------------------------------------- Five_By_Five_Tic_Tac_Toe
 
-class FivebyFive_Tic_Tac_Toe_Board : public Board<char> {
+class Five_By_Five_Tic_Tac_Toe_Board : public Board<char> {
 private:
     bool winX = false;
     bool draw = false;
@@ -80,7 +80,7 @@ private:
     int count_three_in_a_row(
             char symbol); // private because it doesn't need to be extended to other classes or the game manager
 public:
-    FivebyFive_Tic_Tac_Toe_Board();
+    Five_By_Five_Tic_Tac_Toe_Board();
     bool update_board(int x, int y, char symbol) override;
     void display_board() override;
     bool is_win() override;
@@ -88,15 +88,15 @@ public:
     bool game_is_over() override;
 };
 
-class FivebyFive_Tic_Tac_Toe_Player : public Player<char> {
+class Five_By_Five_Tic_Tac_Toe_Player : public Player<char> {
 public:
-    FivebyFive_Tic_Tac_Toe_Player(string name, char symbol);
+    Five_By_Five_Tic_Tac_Toe_Player(string name, char symbol);
     void getmove(int &x, int &y) override;
 };
 
-class FivebyFive_Tic_Tac_Toe_Random_Player : public RandomPlayer<char> {
+class Five_By_Five_Tic_Tac_Toe_Random_Player : public RandomPlayer<char> {
 public:
-    FivebyFive_Tic_Tac_Toe_Random_Player(char symbol);
+    Five_By_Five_Tic_Tac_Toe_Random_Player(char symbol);
     void getmove(int &x, int &y) override;
 };
 
