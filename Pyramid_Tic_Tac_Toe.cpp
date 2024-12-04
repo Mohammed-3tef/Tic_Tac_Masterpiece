@@ -37,39 +37,76 @@ void checkPlayerType(string &playerType, int num) {
     }
 }
 
+vector<string> getFile() {
+    string fileContent, s = "", fileName;
+    stringstream content;
+    vector<string> lines;
+    cout << "\nPlease enter file name:";
+    while (true) {
+        getline(cin, fileName);                               // get file name and check the validity of format.
+        if (fileName.size() < 5) {
+            cout << "\nThe file name should be like this ----> (file name).txt\n";
+            cout << "Please enter a valid file name :";
+            continue;
+        }
+        if (fileName.substr(fileName.size() - 4, 4) != ".txt") {
+            cout << "\nThe file name should be like this ----> (file name).txt\n";
+            cout << "Please enter a valid file name :";
+            continue;
+        }
+        ifstream file(fileName);
+        if (!file.good()) {
+            cout << "\nThe file name should be like this ----> (file name).txt\n";
+            cout << "Please enter a valid file name :";
+            continue;
+        }
+        content << file.rdbuf();
+        break;
+    }
+    fileContent = content.str();
+    for (char character: fileContent) {
+        if (character == '\n') {
+            lines.push_back(s);
+            s = "";
+        } else {
+            s += character;
+        }
+    }
+    lines.push_back(s);
+    return lines;
+}
+
 //--------------------------------------- CLASSES
 
-template<typename T>
-class Pyramid_Tic_Tac_Toe_Board : public Board<T> {
+class Pyramid_Tic_Tac_Toe_Board : public Board<char> {
 private:
     bool over = false;
 public:
     Pyramid_Tic_Tac_Toe_Board();
-    bool update_board(int x, int y, T symbol) override;
+    bool update_board(int x, int y, char symbol) override;
     void display_board() override;
     bool is_win() override;
     bool is_draw() override;
     bool game_is_over() override;
 };
 
-template<typename T>
-class Pyramid_Tic_Tac_Toe_Player : public Player<T> {
+class Pyramid_Tic_Tac_Toe_Player : public Player<char> {
 public:
-    Pyramid_Tic_Tac_Toe_Player(string name, T symbol);
+    Pyramid_Tic_Tac_Toe_Player(string name, char symbol);
     void getmove(int &x, int &y) override;
 };
 
-template<typename T>
-class Pyramid_Tic_Tac_Toe_Random_Player : public RandomPlayer<T> {
+class Pyramid_Tic_Tac_Toe_Random_Player : public RandomPlayer<char> {
 public:
-    Pyramid_Tic_Tac_Toe_Random_Player(T symbol);
+    Pyramid_Tic_Tac_Toe_Random_Player(char symbol);
     void getmove(int &x, int &y) override;
 };
 
 //--------------------------------------- IMPLEMENTATION
 
-template<typename T>
-Pyramid_Tic_Tac_Toe_Board<T>::Pyramid_Tic_Tac_Toe_Board() {
+// ---------------------------- BOARD CLASS
+
+Pyramid_Tic_Tac_Toe_Board::Pyramid_Tic_Tac_Toe_Board() {
     this->rows = 3;
     this->columns = 5;
     int num = 1;
@@ -84,8 +121,7 @@ Pyramid_Tic_Tac_Toe_Board<T>::Pyramid_Tic_Tac_Toe_Board() {
     this->n_moves = 0;
 }
 
-template<typename T>
-bool Pyramid_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
+bool Pyramid_Tic_Tac_Toe_Board::update_board(int x, int y, char symbol) {
     if (((x == 0 && y == 2) || (x == 1 && y == 1) || (x == 1 && y == 2) || (x == 1 && y == 3) || (x == 2 && y == 0) ||
          (x == 2 && y == 1) || (x == 2 && y == 2) || (x == 2 && y == 3) ||
          (x == 2 && y == 4)) && (this->board[x][y] == 0)) {
@@ -96,8 +132,7 @@ bool Pyramid_Tic_Tac_Toe_Board<T>::update_board(int x, int y, T symbol) {
     return false;
 }
 
-template<typename T>
-void Pyramid_Tic_Tac_Toe_Board<T>::display_board() {
+void Pyramid_Tic_Tac_Toe_Board::display_board() {
     int num = 1;
     for (int i = 0; i < this->rows; i++) {
         if (i == 0) {
@@ -124,8 +159,7 @@ void Pyramid_Tic_Tac_Toe_Board<T>::display_board() {
     }
 }
 
-template<typename T>
-bool Pyramid_Tic_Tac_Toe_Board<T>::is_win() {                                   // Check winning.
+bool Pyramid_Tic_Tac_Toe_Board::is_win() {                                   // Check winning.
     if ((this->board[0][2] != 0 && this->board[0][2] == this->board[1][2] && this->board[0][2] == this->board[2][2]) ||
         (this->board[0][2] != 0 && this->board[0][2] == this->board[1][1] && this->board[0][2] == this->board[2][0]) ||
         (this->board[0][2] != 0 && this->board[0][2] == this->board[1][3] && this->board[0][2] == this->board[2][4]) ||
@@ -138,19 +172,18 @@ bool Pyramid_Tic_Tac_Toe_Board<T>::is_win() {                                   
     return false;
 }
 
-template<typename T>
-bool Pyramid_Tic_Tac_Toe_Board<T>::is_draw() {
+bool Pyramid_Tic_Tac_Toe_Board::is_draw() {
     if (this->n_moves == 9) return true;                                        // Check board is full.
     return false;
 }
 
-template<typename T>
-bool Pyramid_Tic_Tac_Toe_Board<T>::game_is_over() {
+bool Pyramid_Tic_Tac_Toe_Board::game_is_over() {
     return over;
 }
 
-template<typename T>
-void Pyramid_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
+// ---------------------------- PLAYER CLASS
+
+void Pyramid_Tic_Tac_Toe_Player::getmove(int &x, int &y) {
     cout << "It's " << this->name << " turn\n";
     string dim1, dim2;
     cout << "\nPlease enter the row:";                                          // Get move.
@@ -188,17 +221,16 @@ void Pyramid_Tic_Tac_Toe_Player<T>::getmove(int &x, int &y) {
     y = stoi(dim2) - 1;
 }
 
-template<typename T>
-Pyramid_Tic_Tac_Toe_Player<T>::Pyramid_Tic_Tac_Toe_Player(std::string name, T symbol) : Player<T>(name, symbol) {}
+Pyramid_Tic_Tac_Toe_Player::Pyramid_Tic_Tac_Toe_Player(std::string name, char symbol) : Player<char>(name, symbol) {}
 
-template<typename T>
-void Pyramid_Tic_Tac_Toe_Random_Player<T>::getmove(int &x, int &y) {
+// ---------------------------- RANDOM PLAYER CLASS
+
+void Pyramid_Tic_Tac_Toe_Random_Player::getmove(int &x, int &y) {
     x = rand() % this->dimension;  // Random number between 0 and 2
     y = rand() % this->dimension;
 }
 
-template<typename T>
-Pyramid_Tic_Tac_Toe_Random_Player<T>::Pyramid_Tic_Tac_Toe_Random_Player(T symbol) : RandomPlayer<T>(symbol) {
+Pyramid_Tic_Tac_Toe_Random_Player::Pyramid_Tic_Tac_Toe_Random_Player(char symbol) : RandomPlayer<char>(symbol) {
     this->dimension = 5;
     this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(0)));  // Seed the random number generator
@@ -209,31 +241,32 @@ Pyramid_Tic_Tac_Toe_Random_Player<T>::Pyramid_Tic_Tac_Toe_Random_Player(T symbol
 int main() {
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
-    Pyramid_Tic_Tac_Toe_Board<char> *gameBoard = new Pyramid_Tic_Tac_Toe_Board<char>();
+    Pyramid_Tic_Tac_Toe_Board *gameBoard = new Pyramid_Tic_Tac_Toe_Board();
 
     cout << "<--------- Welcome To Pyramid Tic Tac Toe --------->\n";
     checkPlayerType(player1Type, 1);                // Get info of player 1.
     if (player1Type == "1") {
         cout << "Please enter Player 1 name:";
         getline(cin, player1Name);
-        players[0] = new Pyramid_Tic_Tac_Toe_Player<char>(player1Name, 'X');
+        players[0] = new Pyramid_Tic_Tac_Toe_Player(player1Name, 'X');
     } else {
-        players[0] = new Pyramid_Tic_Tac_Toe_Random_Player<char>('X');
+        players[0] = new Pyramid_Tic_Tac_Toe_Random_Player('X');
     }
 
     checkPlayerType(player2Type, 2);                // Get info of player 2.
     if (player2Type == "1") {
         cout << "Please enter Player 2 name:";
         getline(cin, player2Name);
-        players[1] = new Pyramid_Tic_Tac_Toe_Player<char>(player2Name, 'O');
+        players[1] = new Pyramid_Tic_Tac_Toe_Player(player2Name, 'O');
     } else {
-        players[1] = new Pyramid_Tic_Tac_Toe_Random_Player<char>('O');
+        players[1] = new Pyramid_Tic_Tac_Toe_Random_Player('O');
     }
 
     GameManager<char> Pyramid_Tic_Tac_Toe_Game(gameBoard, players);
     Pyramid_Tic_Tac_Toe_Game.run();
+
     delete gameBoard;                                           // Delete board.
     delete players[0];                                          // Delete players.
     delete players[1];
-    cout << "\nThanks For Playing My Game :)";
+    cout << "\nTHANKS FOR PLAYING THIS GAME :)\n\n";
 }
