@@ -365,7 +365,7 @@ Four_In_A_Row_Random_Player::Four_In_A_Row_Random_Player(char symbol) : RandomPl
 // ---------------------------- BOARD CLASS
 
 // Constructor for X_O_Board
-FivebyFive_Tic_Tac_Toe_Board::FivebyFive_Tic_Tac_Toe_Board() { //the constructor here is where we initialize the board
+Five_By_Five_Tic_Tac_Toe_Board::Five_By_Five_Tic_Tac_Toe_Board() { //the constructor here is where we initialize the board
     this->rows = this->columns = 5;    //5 rows and 5 columns to make the grid
     this->board = new char *[this->rows];
     for (int i = 0; i < this->rows; i++) {
@@ -377,7 +377,7 @@ FivebyFive_Tic_Tac_Toe_Board::FivebyFive_Tic_Tac_Toe_Board() { //the constructor
     this->n_moves = 0;
 }
 
-bool FivebyFive_Tic_Tac_Toe_Board::update_board(int x, int y, char mark) {
+bool Five_By_Five_Tic_Tac_Toe_Board::update_board(int x, int y, char mark) {
     // Only update if move is valid
     if (!(x < 0 || x >= this->rows || y < 0 || y >= this->columns) && (this->board[x][y] == 0 || mark == 0)) {
         if (mark == 0) {
@@ -393,7 +393,7 @@ bool FivebyFive_Tic_Tac_Toe_Board::update_board(int x, int y, char mark) {
     return false;
 }
 
-void FivebyFive_Tic_Tac_Toe_Board::display_board() {
+void Five_By_Five_Tic_Tac_Toe_Board::display_board() {
     cout << "\n     1   2   3   4   5\n";
     cout << "   ---------------------\n";
 
@@ -406,7 +406,7 @@ void FivebyFive_Tic_Tac_Toe_Board::display_board() {
     }
 }
 
-int FivebyFive_Tic_Tac_Toe_Board::count_three_in_a_row(char symbol) {
+int Five_By_Five_Tic_Tac_Toe_Board::count_three_in_a_row(char symbol) {
     int count = 0;
 
     // Check horizontal
@@ -448,7 +448,7 @@ int FivebyFive_Tic_Tac_Toe_Board::count_three_in_a_row(char symbol) {
     return count;
 }
 
-bool FivebyFive_Tic_Tac_Toe_Board::is_win() {
+bool Five_By_Five_Tic_Tac_Toe_Board::is_win() {
     // Calculate scores for each player
     int scoreX = count_three_in_a_row('X');
     int scoreO = count_three_in_a_row('O');
@@ -477,20 +477,20 @@ bool FivebyFive_Tic_Tac_Toe_Board::is_win() {
 }
 
 // Return true if 9 moves are done and no winner
-bool FivebyFive_Tic_Tac_Toe_Board::is_draw() {
+bool Five_By_Five_Tic_Tac_Toe_Board::is_draw() {
     return draw;
 }
 
-bool FivebyFive_Tic_Tac_Toe_Board::game_is_over() {
+bool Five_By_Five_Tic_Tac_Toe_Board::game_is_over() {
     return is_win() || is_draw();
 }
 
 // ---------------------------- PLAYER CLASS
 
 // Constructor for X_O_Player
-FivebyFive_Tic_Tac_Toe_Player::FivebyFive_Tic_Tac_Toe_Player(string name, char symbol) : Player<char>(name, symbol) {}
+Five_By_Five_Tic_Tac_Toe_Player::Five_By_Five_Tic_Tac_Toe_Player(string name, char symbol) : Player<char>(name, symbol) {}
 
-void FivebyFive_Tic_Tac_Toe_Player::getmove(int &x, int &y) {
+void Five_By_Five_Tic_Tac_Toe_Player::getmove(int &x, int &y) {
     if (n == 0) nameX = this->name;
     while (true) {
         cout << "Enter your move in this form(row space column,e.g 1 3): ";
@@ -513,13 +513,13 @@ void FivebyFive_Tic_Tac_Toe_Player::getmove(int &x, int &y) {
 // ---------------------------- RANDOM PLAYER CLASS
 
 // Constructor for X_O_Random_Player
-FivebyFive_Tic_Tac_Toe_Random_Player::FivebyFive_Tic_Tac_Toe_Random_Player(char symbol) : RandomPlayer<char>(symbol) {
+Five_By_Five_Tic_Tac_Toe_Random_Player::Five_By_Five_Tic_Tac_Toe_Random_Player(char symbol) : RandomPlayer<char>(symbol) {
     this->dimension = 5;
     this->name = "Random Computer Player";
     srand(static_cast<unsigned int>(time(0)));  // Seed the random number generator
 }
 
-void FivebyFive_Tic_Tac_Toe_Random_Player::getmove(int &x, int &y) {
+void Five_By_Five_Tic_Tac_Toe_Random_Player::getmove(int &x, int &y) {
     if (n == 0) nameX = this->name;
     x = rand() % this->dimension;  // Random number between 0 and 2
     y = rand() % this->dimension;
