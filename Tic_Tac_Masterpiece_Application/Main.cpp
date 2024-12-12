@@ -155,7 +155,7 @@ void Five_By_Five_Tic_Tac_Toe() {
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
     auto *gameBoard = new Five_By_Five_Tic_Tac_Toe_Board();
-    cout << "<--------- Welcome To 5x5 Tic Tac Toe --------->\n";
+    cout << "<--------- Welcome To Five By Five Tic Tac Toe --------->\n";
 
     checkPlayerType(player1Type, 1);                // Get info of player 1.
     if (player1Type == "1") {
