@@ -74,7 +74,6 @@ public:
 
 class Five_By_Five_Tic_Tac_Toe_Board : public Board<char> {
 private:
-    bool winX = false;
     bool draw = false;
     // Declare the helper function
     int count_three_in_a_row(
@@ -234,7 +233,12 @@ public:
 
 class SUS_Board : public Board<char> {
 private:
-    bool over = false;
+    int countSus = 0;
+    bool draw = false;
+    int scoreS = 0;
+    int scoreU = 0;
+    int count_three();
+
 public:
     SUS_Board();
     bool update_board(int x, int y, char symbol) override;
