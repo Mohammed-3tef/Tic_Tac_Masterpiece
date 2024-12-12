@@ -8,7 +8,7 @@
 
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 3.0
+// Version: 4.0
 
 //--------------------------------------- HEADERS
 
@@ -26,6 +26,7 @@ set<int> fullColumns;
 
 int n = 0;
 string nameX;
+bool winX = false;
 
 //---------------------------- Numerical_Tic_Tac_Toe
 
@@ -38,6 +39,10 @@ bool firstPlayerTurn = true;
 
 string name1, name2;
 int countNum = 0;
+
+//---------------------------- SUS
+
+bool winU = false;
 
 //--------------------------------------- HELPER FUNCTIONS
 //---------------------------- Numerical_Tic_Tac_Toe
@@ -378,6 +383,7 @@ Five_By_Five_Tic_Tac_Toe_Board::Five_By_Five_Tic_Tac_Toe_Board() { //the constru
 }
 
 bool Five_By_Five_Tic_Tac_Toe_Board::update_board(int x, int y, char mark) {
+    if (winX) return true;
     // Only update if move is valid
     if (!(x < 0 || x >= this->rows || y < 0 || y >= this->columns) && (this->board[x][y] == 0 || mark == 0)) {
         if (mark == 0) {
@@ -491,6 +497,7 @@ bool Five_By_Five_Tic_Tac_Toe_Board::game_is_over() {
 Five_By_Five_Tic_Tac_Toe_Player::Five_By_Five_Tic_Tac_Toe_Player(string name, char symbol) : Player<char>(name, symbol) {}
 
 void Five_By_Five_Tic_Tac_Toe_Player::getmove(int &x, int &y) {
+    if (winX) return;
     if (n == 0) nameX = this->name;
     while (true) {
         cout << "Enter your move in this form(row space column,e.g 1 3): ";
@@ -520,6 +527,7 @@ Five_By_Five_Tic_Tac_Toe_Random_Player::Five_By_Five_Tic_Tac_Toe_Random_Player(c
 }
 
 void Five_By_Five_Tic_Tac_Toe_Random_Player::getmove(int &x, int &y) {
+    if (winX) return;
     if (n == 0) nameX = this->name;
     x = rand() % this->dimension;  // Random number between 0 and 2
     y = rand() % this->dimension;
@@ -838,7 +846,7 @@ void Numerical_Tic_Tac_Toe_Player::getmove(int &x, int &y) {
             continue;
         }
 
-        // Check if the number is available
+            // Check if the number is available
         else if (secondPlayer.find(stoi(numberAsString)) == secondPlayer.end()) {
             cout << "Number already used. Try again.\n";
             continue;
@@ -1238,6 +1246,7 @@ SUS_Board::SUS_Board() {
 }
 
 bool SUS_Board::update_board(int x, int y, char symbol) {
+    if (winU) return true;
     if (!(x < 0 || x >= this->rows || y < 0 || y >= this->columns) && (this->board[x][y] == 0)) {
         this->n_moves++;
         this->board[x][y] = toupper(symbol);
@@ -1257,46 +1266,79 @@ void SUS_Board::display_board() {
     cout << "\n   ___________________\n      1     2     3\n\n";
 }
 
-bool SUS_Board::is_win() {
-    vector<string> patterns;
-    for (int i = 0; i < 3; i++) {                                          // Check winning horizontally and vertically.
-        string row, col;
-        for (int j = 0; j < 3; j++) {
-            row += this->board[i][j];
-            col += this->board[j][i];
+int SUS_Board::count_three() {
+    int count = 0;
+    // Check horizontal
+    for (int i = 0; i < this->rows; ++i) {
+        if (this->board[i][0] == 'S' && this->board[i][1] == 'U' && this->board[i][2] == 'S') {
+            count++;
         }
-        patterns.push_back(row);
-        patterns.push_back(col);
     }
-    string diag1 = "", diag2 = "";
-    for (int i = 0; i < 3; i++) {                                           // Check winning diagonally.
-        diag1 += this->board[i][i];
-        diag2 += this->board[i][2 - i];
-    }
-    patterns.push_back(diag1);
-    patterns.push_back(diag2);
 
-    for (auto &pattern: patterns) {                                 // Compare between board and dictionary.
-        if (pattern == "SUS") {
-            over = true;
-            return true;
+    // Check vertical
+    for (int j = 0; j < this->columns; ++j) {
+        if (this->board[0][j] == 'S' && this->board[1][j] == 'U' && this->board[2][j] == 'S') {
+            count++;
         }
     }
-    return false;
+
+    // Check diagonal (top-left to bottom-right)
+    if (this->board[0][0] == 'S' && this->board[1][1] == 'U' && this->board[2][2] == 'S') {
+        count++;
+    }
+
+    // Check diagonal (top-right to bottom-left)
+    if (this->board[0][2] == 'S' && this->board[1][1] == 'U' && this->board[2][0] == 'S') {
+        count++;
+    }
+    return count;
+}
+
+bool SUS_Board::is_win() {
+    // Calculate scores for each player
+    countSus = count_three();
+    if (this->n_moves % 2 == 0) scoreU = countSus - scoreS;
+    else scoreS = countSus - scoreU;
+
+    // Ensure the board is full except for one square
+    if (this->n_moves < 9) {
+        return false; // Not yet time to determine the winner
+    }
+
+    if (winU) {
+        cout << "\nFinal Scores:\n";
+        cout << "Player S: " << scoreS << " of SUS\n";
+        cout << "Player U: " << scoreU << " of SUS\n";
+        return true;
+    }
+
+    // Announce the scores
+    if (this->n_moves == 9 && scoreS < scoreU) {
+        winU = true;
+        return false;
+    }
+    cout << "\nFinal Scores:\n";
+    cout << "Player S: " << scoreS << " of SUS\n";
+    cout << "Player U: " << scoreU << " of SUS\n";
+    if (this->n_moves == 9 && scoreS == scoreU) {
+        draw = true;
+        return false;
+    }
+    return true; // Game over
 }
 
 bool SUS_Board::is_draw() {
-    if (this->n_moves == 9) return true;                                        // Check board is full.
-    return false;
+    return draw;
 }
 
 bool SUS_Board::game_is_over() {
-    return over;
+    return is_win() || is_draw();
 }
 
 // ---------------------------- PLAYER CLASS
 
 void SUS_Player::getmove(int &x, int &y) {
+    if (winU) return;
     cout << "It's " << this->name << " turn\n";
     string dim1, dim2;
     cout << "\nPlease enter the row:";                                          // Get move.
@@ -1339,6 +1381,7 @@ SUS_Player::SUS_Player(std::string name, char symbol) : Player<char>(name, symbo
 // ---------------------------- RANDOM PLAYER CLASS
 
 void SUS_Random_Player::getmove(int &x, int &y) {
+    if (winU) return;
     x = rand() % this->dimension;                                       // Random number between 0 and 2
     y = rand() % this->dimension;
 }
