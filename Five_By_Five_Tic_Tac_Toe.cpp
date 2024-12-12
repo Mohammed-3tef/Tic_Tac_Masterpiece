@@ -2,7 +2,7 @@
 // ID: 20231189
 // Section: S19
 // TA: Ahmed Ihab
-// Version: 3.0
+// Version: 4.0
 
 /*
  * This is a simple implementation of the Five By Five Tic Tac Toe game.
@@ -25,6 +25,7 @@ using namespace std;
 
 int n = 0;
 string nameX;
+bool winX = false;
 
 //--------------------------------------- HELPER FUNCTIONS
 
@@ -46,7 +47,6 @@ void checkPlayerType(string &playerType, int num) {
 
 class Five_By_Five_Tic_Tac_Toe_Board : public Board<char> {
 private:
-    bool winX = false;
     bool draw = false;
     // Declare the helper function
     int count_three_in_a_row(
@@ -89,6 +89,7 @@ Five_By_Five_Tic_Tac_Toe_Board::Five_By_Five_Tic_Tac_Toe_Board() { //the constru
 }
 
 bool Five_By_Five_Tic_Tac_Toe_Board::update_board(int x, int y, char mark) {
+    if (winX) return true;
     // Only update if move is valid
     if (!(x < 0 || x >= this->rows || y < 0 || y >= this->columns) && (this->board[x][y] == 0 || mark == 0)) {
         if (mark == 0) {
@@ -202,6 +203,7 @@ bool Five_By_Five_Tic_Tac_Toe_Board::game_is_over() {
 Five_By_Five_Tic_Tac_Toe_Player::Five_By_Five_Tic_Tac_Toe_Player(string name, char symbol) : Player<char>(name, symbol) {}
 
 void Five_By_Five_Tic_Tac_Toe_Player::getmove(int &x, int &y) {
+    if (winX) return;
     if (n == 0) nameX = this->name;
     while (true) {
         cout << "Enter your move in this form(row space column,e.g 1 3): ";
@@ -231,6 +233,7 @@ Five_By_Five_Tic_Tac_Toe_Random_Player::Five_By_Five_Tic_Tac_Toe_Random_Player(c
 }
 
 void Five_By_Five_Tic_Tac_Toe_Random_Player::getmove(int &x, int &y) {
+    if (winX) return;
     if (n == 0) nameX = this->name;
     x = rand() % this->dimension;  // Random number between 0 and 2
     y = rand() % this->dimension;
@@ -242,7 +245,7 @@ int main() {
     string player1Type, player2Type, player1Name, player2Name;
     Player<char> *players[2];
     auto *gameBoard = new Five_By_Five_Tic_Tac_Toe_Board();
-    cout << "<--------- Welcome To 5x5 Tic Tac Toe --------->\n";
+    cout << "<--------- Welcome To Five By Five Tic Tac Toe --------->\n";
 
     checkPlayerType(player1Type, 1);                // Get info of player 1.
     if (player1Type == "1") {
