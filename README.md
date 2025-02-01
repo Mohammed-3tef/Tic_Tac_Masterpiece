@@ -169,6 +169,10 @@ The game continues until all squares are filled or no more "S-U-S" sequences can
 ## 🤝 Contributing:
 If you'd like to contribute to this repository, feel free to fork the project and create a pull request with your changes. Make sure to follow the coding standards and ensure your changes are well-documented.
 
+## 🎨 GUI Version  
+
+Looking for a graphical experience? Check out the **Tic Tac Toe Masterpiece GUI Version**: [GUI Version Repository.](https://github.com/NaghamProgrammer/Tic-Tac-Toe-Masterpiece-With-GUI)
+
 ## ✍️ Authors:
 - **Esraa Emary Abd El-Salam**: [GitHub](https://github.com/esraa-emary) - [LinkedIn](https://www.linkedin.com/in/esraa-emary-b372b8303/)
 - **Mohammed Atef Abd El-Kader**: [GitHub](https://github.com/Mohammed-3tef) - [LinkedIn](https://www.linkedin.com/in/mohammed-atef-b0a408299/)
