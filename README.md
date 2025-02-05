@@ -171,7 +171,7 @@ If you'd like to contribute to this repository, feel free to fork the project an
 
 ## 🎨 GUI Version  
 
-Looking for a graphical experience? Check out the **Tic Tac Toe Masterpiece GUI Version**: [GUI Version Repository.](https://github.com/NaghamProgrammer/Tic-Tac-Toe-Masterpiece-With-GUI)
+Looking for a graphical experience? Check out the **Tic Tac Toe Masterpiece GUI Version**: [GUI Version Repository.](https://github.com/Mohammed-3tef/Tic_Tac_Masterpiece_GUI)
 
 ## ✍️ Authors:
 - **Esraa Emary Abd El-Salam**: [GitHub](https://github.com/esraa-emary) - [LinkedIn](https://www.linkedin.com/in/esraa-emary-b372b8303/)
